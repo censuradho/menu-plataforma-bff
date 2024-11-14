@@ -1,4 +1,4 @@
-import { AuthStoreUserController } from "@/controllers/auth/authStoreUser.controller";
+import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.controller";
 import { AuthStoreUserRepository } from "@/domain/repositories/auth/storeuser/AuthStoreUser.repository";
 import { StoreUserRepository } from "@/domain/repositories/storeUser/User.repository";
 import { prisma } from "@/services/PrismaClient";

@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser'
 import { corsConfig } from './shared/config/cors'
 import { environment } from './shared/environment'
 import { loggerHttp } from './shared/lib/logger'
-import { routes } from './routes/routes'
+import { routes } from './infra/routes/routes'
 
 const app = express()
 
