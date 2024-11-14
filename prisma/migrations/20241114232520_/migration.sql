@@ -45,6 +45,10 @@ CREATE TABLE "stores" (
 -- CreateTable
 CREATE TABLE "menuGroups" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "label" TEXT NOT NULL,
+    "visible" BOOLEAN NOT NULL DEFAULT true,
+    "hourFrom" TEXT,
+    "hourTo" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -63,14 +67,19 @@ CREATE TABLE "products" (
     "value" TEXT NOT NULL,
     "image" TEXT,
     "visible" BOOLEAN NOT NULL DEFAULT true,
-    "limitAge" BOOLEAN NOT NULL DEFAULT false
+    "limitAge" BOOLEAN NOT NULL DEFAULT false,
+    "menuId" TEXT NOT NULL,
+    CONSTRAINT "products_menuId_fkey" FOREIGN KEY ("menuId") REFERENCES "menus" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "productCustomPrice" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "value" TEXT NOT NULL,
-    "code" TEXT NOT NULL
+    "code" TEXT NOT NULL,
+    "active" BOOLEAN NOT NULL,
+    "productId" TEXT NOT NULL,
+    CONSTRAINT "productCustomPrice_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable

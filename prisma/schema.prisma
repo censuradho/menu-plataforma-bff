@@ -84,7 +84,14 @@ model Store {
 model MenuGroup {
   id String @id
 
+  label String
+
+  visible Boolean @default(true)
+
   menus Menu[]
+
+  hourFrom String?
+  hourTo String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -98,6 +105,8 @@ model Menu {
   groupId String
   group MenuGroup @relation(fields: [groupId], references: [id])
 
+  products Product[]
+
   @@map("menus")
 }
 
@@ -110,8 +119,12 @@ model Product {
   image String?
 
   visible Boolean @default(true)
-
   limitAge Boolean @default(false)
+
+  customPrices ProductCustomPrice[]
+
+  menuId String
+  menu Menu @relation(fields: [menuId], references: [id])
 
   @@map("products")
 }
@@ -121,6 +134,10 @@ model ProductCustomPrice {
 
   value String
   code String
+  active Boolean
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
 
   @@map("productCustomPrice")
 }
