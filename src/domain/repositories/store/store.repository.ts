@@ -2,7 +2,6 @@ import { CreateStoreDTO } from "@/domain/dto/store.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
-import { randomUUID } from "crypto";
 
 export class StoreRepository {
   constructor (
@@ -20,7 +19,6 @@ export class StoreRepository {
 
     await this.prisma.store.create({
       data: {
-        id: randomUUID(),
         cuisineType: payload.cuisineType,
         document: payload.document,
         documentType: payload.documentType,
