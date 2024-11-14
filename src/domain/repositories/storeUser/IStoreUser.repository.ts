@@ -4,4 +4,5 @@ import { StoreUserEntity } from "@/domain/entity/StoreUser.entity";
 export interface IStoreUSerRepository {
   findByEmail(email: string): Promise<StoreUserEntity | null>
   create(payload: CreateStoreUserDTO): Promise<string>
+  findById(id: string): Promise<StoreUserEntity | null>
 }

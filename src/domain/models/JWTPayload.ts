@@ -1,1 +1,5 @@
-  export class JWTPayload {}
+  export class JWTPayload {
+    constructor (
+      public id: string
+    ) {}
+  }

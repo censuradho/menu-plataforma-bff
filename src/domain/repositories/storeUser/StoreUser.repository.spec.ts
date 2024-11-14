@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Context, createMockContext, MockContext } from '@/__test__/setup'
 import { StoreUserRepository } from './User.repository'
-import { createStoreUserDTOPayloadMock, storeUserEntity } from '@/__mock__/storeUser'
+import { createStoreUserDTOPayloadMock, storeUserEntityMock } from '@/__mock__/storeUser'
 import { HttpException } from '@/domain/models/HttpException'
 import { ERRORS } from '@/shared/errors'
 
@@ -22,15 +22,29 @@ describe('UserRepository', () => {
   })
 
 
-  describe('.findByEmail', () => {
-    it ('Should return store user by email', async () => {
-      mock.prisma.storeUser.findFirst.mockResolvedValue(storeUserEntity)
+  describe('.findById', () => {
+    it ('Should return store user by id', async () => {
+      mock.prisma.storeUser.findFirst.mockResolvedValue(storeUserEntityMock)
 
-      await repository.findByEmail(storeUserEntity.email)
+      await repository.findById(storeUserEntityMock.id)
 
       expect(mock.prisma.storeUser.findFirst).toHaveBeenCalledWith({
         where: {
-          email: storeUserEntity.email
+          id: storeUserEntityMock.id
+        }
+      })
+    })
+  })
+
+  describe('.findByEmail', () => {
+    it ('Should return store user by email', async () => {
+      mock.prisma.storeUser.findFirst.mockResolvedValue(storeUserEntityMock)
+
+      await repository.findByEmail(storeUserEntityMock.email)
+
+      expect(mock.prisma.storeUser.findFirst).toHaveBeenCalledWith({
+        where: {
+          email: storeUserEntityMock.email
         }
       })
     })
@@ -38,7 +52,7 @@ describe('UserRepository', () => {
 
   describe('.create', () => {
     it ('Should throw an exception if already email related to a store user', async () => {
-      mock.prisma.storeUser.findFirst.mockResolvedValue(storeUserEntity)
+      mock.prisma.storeUser.findFirst.mockResolvedValue(storeUserEntityMock)
 
       const request = repository.create(createStoreUserDTOPayloadMock)
 
@@ -67,7 +81,7 @@ describe('UserRepository', () => {
           password: passwordHashed
         }
       })
-      expect(bcrypt.hashSync).toHaveBeenCalledWith(storeUserEntity.password, 10);
+      expect(bcrypt.hashSync).toHaveBeenCalledWith(createStoreUserDTOPayloadMock.password, 10);
     })
   })
 })

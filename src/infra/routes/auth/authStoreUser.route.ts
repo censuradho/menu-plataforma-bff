@@ -1,9 +1,17 @@
-import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.controller";
+import { Router } from "express";
+
 import { AuthStoreUserRepository } from "@/domain/repositories/auth/storeuser/AuthStoreUser.repository";
 import { StoreUserRepository } from "@/domain/repositories/storeUser/User.repository";
+
 import { prisma } from "@/services/PrismaClient";
-import { Router } from "express";
-import { authStoreUserSignUpWithEmailAndPasswordValidation, isValidEmailValidation } from "../../middleware/auth/authStoreUser.validation";
+
+import { 
+  authStoreUserSignUpWithEmailAndPasswordValidation, 
+  isValidEmailValidation, 
+  signInWithEmailAndPasswordRequestBodyValidation 
+} from "@/infra/middleware/auth/authStoreUser.validation";
+import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.controller";
+import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
 
 const authStoreUserRoute = Router()
 
@@ -21,6 +29,24 @@ authStoreUserRoute.post(
   '/store-user/email-validation', 
   isValidEmailValidation, 
   controller.isValidEmail.bind(controller)
+)
+
+authStoreUserRoute.post(
+  '/store-user/login', 
+  signInWithEmailAndPasswordRequestBodyValidation,
+  controller.signInWithEmailAndPassword.bind(controller)
+)
+
+authStoreUserRoute.get(
+  '/store-user/me', 
+  storeUserJwtMiddleware,
+  controller.me.bind(controller)
+)
+
+
+authStoreUserRoute.get(
+  '/store-user/logout', 
+  controller.logout.bind(controller)
 )
 
 export {

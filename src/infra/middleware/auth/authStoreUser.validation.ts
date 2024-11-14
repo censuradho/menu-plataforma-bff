@@ -1,4 +1,4 @@
-import { IsValidEmailDTO } from "@/domain/dto/authStoreuser.dto";
+import { IsValidEmailDTO, SignInWithEmailAndPasswordDTO } from "@/domain/dto/authStoreuser.dto";
 import { CreateStoreUserDTO } from "@/domain/dto/StoreUser.dto";
 import { validateOrReject } from "class-validator";
 import { NextFunction, Request, Response } from "express";
@@ -53,3 +53,30 @@ export async function isValidEmailValidation (req: Request, res: Response, next:
     })
   }
 }
+
+export async function signInWithEmailAndPasswordRequestBodyValidation (req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.body) return res.status(400).json({
+      message: 'MISSING_REQUEST_BODY'
+    })
+
+    const validation = new SignInWithEmailAndPasswordDTO()
+
+    const body = req.body as SignInWithEmailAndPasswordDTO
+
+
+    validation.email = body.email
+    validation.password = body.password
+
+    await validateOrReject(validation)
+
+    req.body = validation
+    next()
+
+  } catch (error: any) {
+    return res.status(400).json({
+      message: Object.values(error[0].constraints)[0]
+    })
+  }
+}
+

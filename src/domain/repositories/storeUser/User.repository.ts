@@ -1,11 +1,10 @@
-import bcrypt from 'bcrypt';
 import { CreateStoreUserDTO } from "@/domain/dto/StoreUser.dto";
-import { IStoreUSerRepository } from "./IStoreUser.repository";
-import { PrismaClient } from "@prisma/client";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from 'bcrypt';
 import { randomUUID } from "crypto";
-import { promisify } from 'util';
+import { IStoreUSerRepository } from "./IStoreUser.repository";
 
 export class StoreUserRepository implements IStoreUSerRepository {
   constructor (private prisma: PrismaClient) {}
@@ -38,5 +37,13 @@ export class StoreUserRepository implements IStoreUSerRepository {
     })
 
     return id
+  }
+
+  async findById (id: string) {
+    return this.prisma.storeUser.findFirst({
+      where: {
+        id
+      }
+    })
   }
 }
