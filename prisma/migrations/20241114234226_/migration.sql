@@ -16,7 +16,7 @@ CREATE TABLE "Storestaff" (
     "fullName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "storeId" TEXT NOT NULL,
+    "storeId" INTEGER NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Storestaff_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -24,13 +24,13 @@ CREATE TABLE "Storestaff" (
 
 -- CreateTable
 CREATE TABLE "operationModes" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "label" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "stores" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "ownerId" TEXT NOT NULL,
     "document" TEXT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE "stores" (
 
 -- CreateTable
 CREATE TABLE "menuGroups" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "label" TEXT NOT NULL,
     "visible" BOOLEAN NOT NULL DEFAULT true,
     "hourFrom" TEXT,
@@ -55,37 +55,37 @@ CREATE TABLE "menuGroups" (
 
 -- CreateTable
 CREATE TABLE "menus" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "groupId" TEXT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "groupId" INTEGER NOT NULL,
     CONSTRAINT "menus_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "menuGroups" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "products" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "label" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "image" TEXT,
     "visible" BOOLEAN NOT NULL DEFAULT true,
     "limitAge" BOOLEAN NOT NULL DEFAULT false,
-    "menuId" TEXT NOT NULL,
+    "menuId" INTEGER NOT NULL,
     CONSTRAINT "products_menuId_fkey" FOREIGN KEY ("menuId") REFERENCES "menus" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "productCustomPrice" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "value" TEXT NOT NULL,
     "code" TEXT NOT NULL,
     "active" BOOLEAN NOT NULL,
-    "productId" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
     CONSTRAINT "productCustomPrice_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "_OperationModeToStore" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL,
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
     CONSTRAINT "_OperationModeToStore_A_fkey" FOREIGN KEY ("A") REFERENCES "operationModes" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "_OperationModeToStore_B_fkey" FOREIGN KEY ("B") REFERENCES "stores" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

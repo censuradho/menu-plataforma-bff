@@ -37,7 +37,7 @@ model StoreStaff  {
   email String
   password String
 
-  storeId String
+  storeId Int
   store Store @relation(fields: [storeId], references: [id])
 
   createdAt DateTime @default(now())
@@ -47,7 +47,7 @@ model StoreStaff  {
 }
 
 model OperationMode {
-  id String @id
+  id Int @id @default(autoincrement())
 
   label String
 
@@ -57,7 +57,8 @@ model OperationMode {
 }
 
 model Store {
-  id String @id
+  id Int @id @default(autoincrement())
+
   name String
 
   ownerId String @unique
@@ -82,7 +83,7 @@ model Store {
 }
 
 model MenuGroup {
-  id String @id
+  id Int @id @default(autoincrement())
 
   label String
 
@@ -100,9 +101,10 @@ model MenuGroup {
 }
 
 model Menu {
-  id String @id
+  id Int @id @default(autoincrement())
 
-  groupId String
+
+  groupId Int
   group MenuGroup @relation(fields: [groupId], references: [id])
 
   products Product[]
@@ -111,7 +113,8 @@ model Menu {
 }
 
 model Product {
-  id String @id
+  id Int @id @default(autoincrement())
+
   label String
   
   value String
@@ -123,20 +126,20 @@ model Product {
 
   customPrices ProductCustomPrice[]
 
-  menuId String
+  menuId Int
   menu Menu @relation(fields: [menuId], references: [id])
 
   @@map("products")
 }
 
 model ProductCustomPrice {
-  id String @id
+  id Int @id @default(autoincrement())
 
   value String
   code String
   active Boolean
 
-  productId String
+  productId Int
   product Product @relation(fields: [productId], references: [id])
 
   @@map("productCustomPrice")
