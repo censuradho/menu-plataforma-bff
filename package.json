@@ -1,0 +1,62 @@
+{
+  "name": "menu-bff",
+  "version": "1.0.0",
+  "description": "BFF",
+  "main": "./src/main.ts",
+  "author": "Censuradho",
+  "license": "MIT",
+  "type": "commonjs",
+  "private": false,
+  "scripts": {
+    "dev": "ts-node-dev -r tsconfig-paths/register src/main.ts",
+    "migrate:dev": "prisma migrate dev",
+    "generate": "prisma generate",
+    "build": "tsc",
+    "start": "./dist/main.js",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "@vitest/coverage-v8": "^2.0.5",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "class-transform": "^0.7.0",
+    "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "1.4.5-lts.1",
+    "pino": "^9.5.0",
+    "pino-http": "^10.3.0",
+    "reflect-metadata": "^0.2.2",
+    "sharp": "^0.33.5",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.7.4",
+    "@types/swagger-ui-express": "^4.1.6",
+    "eslint": "^9.9.0",
+    "pino-pretty": "^12.0.0",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.1.0",
+    "vitest": "^2.1.4",
+    "vitest-mock-extended": "^2.0.2"
+  }
+}
