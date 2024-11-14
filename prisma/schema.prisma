@@ -13,19 +13,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model StoreUser {
   id String @id
-  firstName String @default("Unknow")
+  firstName String @default("")
   lastName String @default("")
   phone String
 
   email String
   password String
 
+  store Store?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   @@map("users")
+}
+
+model StoreStaff  {
+  id String @id
+
+  fullName String
+  email String
+  password String
+
+  storeId String
+  store Store @relation(fields: [storeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@map("Storestaff")
 }
 
 model OperationMode {
@@ -41,6 +59,11 @@ model OperationMode {
 model Store {
   id String @id
   name String
+
+  ownerId String @unique
+  owner StoreUser @relation(fields: [ownerId], references: [id])
+
+  staffs StoreStaff[]
 
   document String
   documentType String
