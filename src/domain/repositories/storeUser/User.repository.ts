@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
 import { randomUUID } from "crypto";
+import { promisify } from 'util';
 
 export class StoreUserRepository implements IStoreUSerRepository {
   constructor (private prisma: PrismaClient) {}
