@@ -3,7 +3,7 @@ import { AuthStoreUserRepository } from "@/domain/repositories/auth/storeuser/Au
 import { StoreUserRepository } from "@/domain/repositories/storeUser/User.repository";
 import { prisma } from "@/services/PrismaClient";
 import { Router } from "express";
-import { authStoreUserSignUpWithEmailAndPasswordValidation, isValidEmailValidation } from "../middleware/auth/authStoreUser.validation";
+import { authStoreUserSignUpWithEmailAndPasswordValidation, isValidEmailValidation } from "../../middleware/auth/authStoreUser.validation";
 
 const authStoreUserRoute = Router()
 
