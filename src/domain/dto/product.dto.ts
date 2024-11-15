@@ -8,10 +8,6 @@ export class CreateProductDTO {
   value: string
 
   @IsOptional()
-  @IsUrl()
-  image?: string
-
-  @IsOptional()
   @IsBoolean()
   visible: boolean
 
