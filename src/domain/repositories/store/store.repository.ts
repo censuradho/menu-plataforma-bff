@@ -8,6 +8,25 @@ export class StoreRepository {
     private prisma: PrismaClient
   ) {}
 
+  async findStoreByOwnerId (id: string) {
+    return this.prisma.store.findFirst({
+      where: {
+        ownerId: id,
+      }
+    })
+  }
+
+  async findStoreIdByOwnerId (id: string) {
+    return this.prisma.store.findFirst({
+      where: {
+        ownerId: id,
+      },
+      select: {
+        id: true
+      }
+    })
+  }
+
   async create (ownerId: string, payload: CreateStoreDTO) {
     const alreadyHaveStore= await this.prisma.store.findFirst({
       where: {

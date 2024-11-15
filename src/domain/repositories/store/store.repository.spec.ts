@@ -91,4 +91,73 @@ describe('StoreRepository', () => {
       })
     })
   })
+
+  describe('.findStoreByOwnerId', () => {
+    it ('Should return store by owner id', async () => {
+      mock.prisma.store.findFirst.mockResolvedValue(storeEntityMock)
+
+      const store = await repository.findStoreByOwnerId(storeEntityMock.ownerId)
+
+      expect(mock.prisma.store.findFirst).toHaveBeenLastCalledWith({
+        where: {
+          ownerId: storeEntityMock.ownerId
+        }
+      })
+      expect(store).toStrictEqual(storeEntityMock)
+    })
+
+    it ('Should return null if not found store by owner id', async () => {
+      mock.prisma.store.findFirst.mockResolvedValue(null)
+
+      const store = await repository.findStoreByOwnerId(storeEntityMock.ownerId)
+
+      expect(mock.prisma.store.findFirst).toHaveBeenLastCalledWith({
+        where: {
+          ownerId: storeEntityMock.ownerId
+        }
+      })
+
+      expect(store).toBe(null)
+    })
+  })
+
+  describe('.findStoreIdByOwnerId', () => {
+    it ('Should return store id by owner id', async () => {
+
+      mock.prisma.store.findFirst.mockResolvedValue({
+        id: storeEntityMock.id
+      } as any)
+
+      const store = await repository.findStoreIdByOwnerId(storeEntityMock.ownerId)
+
+      expect(mock.prisma.store.findFirst).toHaveBeenLastCalledWith({
+        where: {
+          ownerId: storeEntityMock.ownerId
+        },
+        select: {
+          id: true
+        }
+      })
+      expect(store).toStrictEqual({
+        id: storeEntityMock.id
+      })
+    })
+
+    it ('Should return null if not found store by owner id', async () => {
+      mock.prisma.store.findFirst.mockResolvedValue(null)
+
+      const store = await repository.findStoreIdByOwnerId(storeEntityMock.ownerId)
+
+      expect(mock.prisma.store.findFirst).toHaveBeenLastCalledWith({
+        where: {
+          ownerId: storeEntityMock.ownerId
+        },
+        select: {
+          id: true
+        }
+      })
+
+      expect(store).toBe(null)
+    })
+  })
 })

@@ -9,10 +9,12 @@ import { Jwt } from '@/shared/jwt';
 import { compare } from 'bcrypt';
 import { IAuthStoreUserRepository } from './IAuthStoreUser.repository';
 import { StoreUserModel } from '@/domain/models/StoreUserModel';
+import { StoreRepository } from '../../store/store.repository';
 
 export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   constructor (
-    private storeUserRepository: StoreUserRepository
+    private storeUserRepository: StoreUserRepository,
+    private storeRepository: StoreRepository
   ) {}
 
   async signUpWithEmailAndPassword(payload: CreateStoreUserDTO) {
@@ -27,9 +29,12 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     return true
   }
 
-  private generateJWT (user: StoreUserEntity) {
+  private generateJWT (user: StoreUserEntity, storeId?: number) {
 
-    const jwtPayload = new JWTPayload(user.id)
+    const jwtPayload = new JWTPayload(
+      user.id,
+      storeId
+    )
 
     const token = Jwt.generateAccessToken(
       jwtPayload
@@ -47,7 +52,9 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
 
     if (!isPasswordMatched) throw new HttpException(401, ERRORS.AUTH.INCORRECT_EMAIL_OR_PASSWORD)
 
-    return this.generateJWT(entity)
+    const store = await this.storeRepository.findStoreIdByOwnerId(entity.id)
+
+    return this.generateJWT(entity, store?.id)
   }
 
   async me(id: string) {
