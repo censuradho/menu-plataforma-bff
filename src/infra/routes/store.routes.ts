@@ -18,6 +18,12 @@ storeRoutes.post(
   controller.create.bind(controller)
 )
 
+storeRoutes.get(
+  '/store', 
+  storeUserJwtMiddleware,
+  controller.findByOwnerId.bind(controller)
+)
+
 export {
   storeRoutes
 }

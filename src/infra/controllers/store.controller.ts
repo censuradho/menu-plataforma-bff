@@ -26,6 +26,20 @@ export class StoreController {
   }
 
   async findByOwnerId (req: Request, res: Response) {
-    
+    const user = req.user as JWTPayload
+
+    try {
+      const store = await this.storeRepository.findStoreByOwnerId(user.id)
+
+      return res.json(store)
+    } catch (error) {
+      req.log.error(error)
+
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
   }
 }
