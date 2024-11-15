@@ -5,7 +5,7 @@ import { Context, createMockContext, MockContext } from "@/__test__/setup";
 import { MenuGroupRepository } from "./menuGroup.repository";
 import { StoreRepository } from "@/domain/repositories/store/store.repository";
 import { storeEntityMock } from "@/__mock__/store";
-import { createMenuGroupDTOMock } from "@/__mock__/menuGroup";
+import { createMenuGroupDTOMock, menuGroupWithMenuAndProductsMock } from "@/__mock__/menuGroup";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
 
@@ -46,10 +46,13 @@ describe('MenuGroupRepository', () => {
 
     it ('Should create menu group', async () => {
       vi.mocked(storeRepository.findStoreByOwnerId).mockResolvedValue(storeEntityMock)
+      mock.prisma.menuGroup.create.mockResolvedValue(menuGroupWithMenuAndProductsMock)
+
       const  userId = 'userId'
 
-      await repository.create(userId, createMenuGroupDTOMock)
+      const payload = await repository.create(userId, createMenuGroupDTOMock)
 
+      expect(payload).toStrictEqual(menuGroupWithMenuAndProductsMock)
       expect(storeRepository.findStoreByOwnerId).toHaveBeenCalledWith(userId)
       expect(mock.prisma.menuGroup.create).toHaveBeenLastCalledWith({
         data: {

@@ -49,6 +49,6 @@ export class MenuGroupRepository {
       }
     })
 
-    console.log(menuGroup)
+    return menuGroup
   }
 }
