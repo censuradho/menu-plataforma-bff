@@ -1,4 +1,6 @@
-import { IsBoolean, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsOptional, IsString, ValidateNested } from "class-validator";
+import { CreateMenuDTO } from "./menu.dto";
+import { Type } from "class-transformer";
 
 export class CreateMenuGroupDTO {
   @IsString()
@@ -13,4 +15,9 @@ export class CreateMenuGroupDTO {
 
   @IsString()
   hourTo: string
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateMenuDTO)
+  menus: CreateMenuDTO[]
 }
