@@ -1,31 +1,76 @@
-import { StoreRepository } from '@/domain/repositories/store/store.repository';
 import { CreateMenuGroupDTO } from "@/domain/dto/menuGroup.dto";
 import { PrismaClient } from "@prisma/client";
-import { HttpException } from '@/domain/models/HttpException';
-import { ERRORS } from '@/shared/errors';
 
 export class MenuGroupRepository {
   constructor (
-    private prisma: PrismaClient,
-    private storeRepository: StoreRepository
+    private prisma: PrismaClient
   ) {}
 
-  async create (
-    userId: string,
+  async upsert (
+    storeId: number,
     payload: CreateMenuGroupDTO
   ) {
 
-    const store = await this.storeRepository.findStoreByOwnerId(userId)
-
-    if (!store) throw new HttpException(404, ERRORS.STORE.NOT_FOUND)
-
-    const menuGroup =  await this.prisma.menuGroup.create({
-      data: {
-        label: payload.label,
+    const menuGroup = await this.prisma.menuGroup.upsert({
+      where: {
+        storeId,
+        id: payload?.id || 0
+      },
+      update: {
         hourFrom: payload.hourFrom,
         hourTo: payload.hourTo,
+        label: payload.label,
         visible: payload.visible,
-        storeId: store.id,
+        updatedAt: new Date(),
+        menus: {
+          upsert: payload.menus.map(menu => ({
+            where: {
+              id: menu?.id || 0
+            },
+            update: {
+              label: menu.label,
+              updatedAt: new Date(),
+              products: {
+                upsert: menu.products.map(product => ({
+                  where: {
+                    id: product?.id || 0
+                  },
+                  update: {
+                    label: product.label,
+                    limitAge: product.limitAge,
+                    value: product.value,
+                    visible: product.visible,
+                    updatedAt: new Date()
+                  },
+                  create: {
+                    label: product.label,
+                    limitAge: product.limitAge,
+                    value: product.value,
+                    visible: product.visible,
+                  }
+                }))
+              },
+            },
+            create: {
+              label: menu.label,
+              products: {
+                create: menu.products.map(product => ({
+                  label: product.label,
+                  limitAge: product.limitAge,
+                  value: product.value,
+                  visible: product.visible,
+                }))
+              }
+            }
+          }))
+        }
+      },
+      create: {
+        hourFrom: payload.hourFrom,
+        hourTo: payload.hourTo,
+        label: payload.label,
+        visible: payload.visible,
+        storeId,
         menus: {
           create: payload.menus.map(menu => ({
             label: menu.label,
@@ -50,5 +95,20 @@ export class MenuGroupRepository {
     })
 
     return menuGroup
+  }
+
+  async findMany (storeId: number) {
+    return await this.prisma.menuGroup.findMany({
+      where: {
+        storeId
+      },
+      include: {
+        menus: {
+          include: {
+            products: true
+          }
+        }
+      }
+    })
   }
 }

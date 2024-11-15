@@ -8,11 +8,29 @@ export class MenuGroupController {
     private menuGroupRepository: MenuGroupRepository
   ) {}
 
-  async create (req: Request, res: Response) {
+  async upsert (req: Request, res: Response) {
     try {
       const user = req.user as JWTPayload
 
-      const menuGroup = await this.menuGroupRepository.create(user.id, req.body)
+      const menuGroup = await this.menuGroupRepository.upsert(user.storeId!!, req.body)
+
+      return res.status(201).json(menuGroup)
+
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
+
+  async findMany (req: Request, res: Response) {
+    try {
+      const user = req.user as JWTPayload
+
+      const menuGroup = await this.menuGroupRepository.findMany(user.storeId!!)
 
       return res.status(201).json(menuGroup)
 

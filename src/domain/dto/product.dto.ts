@@ -1,6 +1,9 @@
 import { IsBoolean, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class CreateProductDTO {
+  @IsOptional()
+  id?: number
+  
   @IsString()
   label: string
 

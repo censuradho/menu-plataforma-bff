@@ -35,6 +35,8 @@ import { MenuGrouWithMenuAndProducts } from "@/domain/entity/MenuGroup.entity";
         groupId: 1,
         id: 1,
         label: '',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         products: [
           {
             id: 1,
@@ -43,7 +45,9 @@ import { MenuGrouWithMenuAndProducts } from "@/domain/entity/MenuGroup.entity";
             limitAge: true,
             menuId: 1,
             value: '100',
-            visible: true
+            visible: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
           }
         ]
       }

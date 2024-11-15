@@ -12,6 +12,7 @@ export async function createMenuGroupValidation (req: Request, res: Response, ne
 
     const validation = new CreateMenuGroupDTO()
   
+    validation.id = payload.id
     validation.hourFrom = payload.hourFrom
     validation.hourTo = payload.hourTo
     validation.label = payload.label

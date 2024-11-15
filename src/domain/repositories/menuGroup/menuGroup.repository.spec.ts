@@ -15,65 +15,54 @@ describe('MenuGroupRepository', () => {
   let mock: MockContext
   let ctx: Context
   let repository: MenuGroupRepository
-  let storeRepository: StoreRepository
 
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
-    storeRepository = new StoreRepository(ctx.prisma)
     repository = new MenuGroupRepository(
-      ctx.prisma,
-      storeRepository
+      ctx.prisma
     )
   })
 
-  describe('.create', () => {
-    it ('Should throw an exception if store not found by logged user id', async () => {
-      vi.mocked(storeRepository.findStoreByOwnerId).mockResolvedValue(null)
-      const  userId = 'userId'
+  describe('.upsert', () => {
+    it('Should create or update if entity provide id', async () => {
+      mock.prisma.menuGroup.upsert.mockResolvedValueOnce(menuGroupWithMenuAndProductsMock)
 
-      const request = repository.create(userId, createMenuGroupDTOMock)
+      const storeId = 1
 
-      await expect(request).rejects.toBeInstanceOf(HttpException)
-      await expect(request).rejects.toThrowError(
-        expect.objectContaining({
-          status: 404,
-          message: ERRORS.STORE.NOT_FOUND
-        })
-      )
-      expect(storeRepository.findStoreByOwnerId).toHaveBeenCalledWith(userId)
-    })
+      const result = await repository.upsert(storeId, createMenuGroupDTOMock)
 
-    it ('Should create menu group', async () => {
-      vi.mocked(storeRepository.findStoreByOwnerId).mockResolvedValue(storeEntityMock)
-      mock.prisma.menuGroup.create.mockResolvedValue(menuGroupWithMenuAndProductsMock)
-
-      const  userId = 'userId'
-
-      const payload = await repository.create(userId, createMenuGroupDTOMock)
-
-      expect(payload).toStrictEqual(menuGroupWithMenuAndProductsMock)
-      expect(storeRepository.findStoreByOwnerId).toHaveBeenCalledWith(userId)
-      expect(mock.prisma.menuGroup.create).toHaveBeenLastCalledWith({
-        data: {
-          label: createMenuGroupDTOMock.label,
-          hourFrom: createMenuGroupDTOMock.hourFrom,
-          hourTo: createMenuGroupDTOMock.hourTo,
-          visible: createMenuGroupDTOMock.visible,
-          storeId: expect.any(Number),
+      expect(result).toStrictEqual(menuGroupWithMenuAndProductsMock)
+      expect(mock.prisma.menuGroup.upsert).toHaveBeenCalledWith({
+        where: {
+          storeId,
+          id: 0,
+        },
+        update: expect.any(Object),
+        create: expect.any(Object),
+        include: {
           menus: {
-            create: createMenuGroupDTOMock.menus.map(menu => ({
-              label: menu.label,
-              products: {
-                create: menu.products.map(product => ({
-                  label: product.label,
-                  limitAge: product.limitAge,
-                  value: product.value,
-                  visible: product.visible,
-                }))
-              }
-            }))
-          }
+            include: {
+              products: true,
+            },
+          },
+        },
+      })
+    })
+  })
+
+  describe('.findMany', () => {
+    it ('Should return many menuGroup results by storeId', async () => {
+      mock.prisma.menuGroup.findMany.mockResolvedValueOnce([ menuGroupWithMenuAndProductsMock ])
+
+      const storeId = 1
+
+      const result = await repository.findMany(storeId)
+
+      expect(result).toStrictEqual(result)
+      expect(mock.prisma.menuGroup.findMany).toHaveBeenCalledWith({
+        where: {
+          storeId
         },
         include: {
           menus: {
@@ -83,7 +72,6 @@ describe('MenuGroupRepository', () => {
           }
         }
       })
-
     })
   })
 })

@@ -3,6 +3,9 @@ import { CreateMenuDTO } from "./menu.dto";
 import { Type } from "class-transformer";
 
 export class CreateMenuGroupDTO {
+  @IsOptional()
+  id?: number
+  
   @IsString()
   label: string
 

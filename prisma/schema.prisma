@@ -117,6 +117,9 @@ model Menu {
 
   products Product[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
   @@map("menus")
 }
 
@@ -137,6 +140,9 @@ model Product {
   menuId Int
   menu Menu @relation(fields: [menuId], references: [id])
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
   @@map("products")
 }
 
@@ -150,5 +156,8 @@ model ProductCustomPrice {
   productId Int
   product Product @relation(fields: [productId], references: [id])
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  
   @@map("productCustomPrice")
 }
