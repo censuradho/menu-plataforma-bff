@@ -24,4 +24,8 @@ export class StoreController {
       return res.sendStatus(500)   
     }
   }
+
+  async findByOwnerId (req: Request, res: Response) {
+    
+  }
 }

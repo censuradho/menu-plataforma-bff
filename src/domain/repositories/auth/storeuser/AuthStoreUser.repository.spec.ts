@@ -1,27 +1,35 @@
+import { StoreRepository } from '@/domain/repositories/store/store.repository';
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
 import { describe, expect, it, vi, beforeEach, Mock } from "vitest";
 import { AuthStoreUserRepository } from "./AuthStoreUser.repository";
 
-import { StoreUserRepository } from "../../storeUser/User.repository";
+import { StoreUserRepository } from "@/domain/repositories/storeUser/User.repository";
 import { createStoreUserDTOPayloadMock, loginStoreUserDTOMock, storeUserEntityMock } from "@/__mock__/storeUser";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
 import { StoreUserModel } from "@/domain/models/StoreUserModel";
 
 vi.mock('@/domain/repositories/storeUser/User.repository')
+vi.mock('@/domain/repositories/store/store.repository')
 
 describe('AuthStoreUserRepository', () => {
   let mock: MockContext
   let ctx: Context
   let repository: AuthStoreUserRepository
   let storeUserRepository: StoreUserRepository
+  let storeRepository: StoreRepository
 
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
     console.log(ctx)
     storeUserRepository = new StoreUserRepository(ctx.prisma)
-    repository = new AuthStoreUserRepository(storeUserRepository)
+    storeRepository = new StoreRepository(ctx.prisma)
+
+    repository = new AuthStoreUserRepository(
+      storeUserRepository,
+      storeRepository
+    )
   })
 
   describe('.signUpWithEmailAndPassword', () => {
@@ -70,6 +78,7 @@ describe('AuthStoreUserRepository', () => {
 
       const token = await repository.signInWithEmailAndPassword(loginStoreUserDTOMock)
 
+      expect(storeRepository.findStoreIdByOwnerId).toHaveBeenCalledWith(storeUserEntityMock.id)
       expect(token).toBeTruthy()
     })
   })

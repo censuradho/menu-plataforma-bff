@@ -12,11 +12,13 @@ import {
 } from "@/infra/middleware/auth/authStoreUser.validation";
 import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.controller";
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
+import { StoreRepository } from "@/domain/repositories/store/store.repository";
 
 const authStoreUserRoute = Router()
 
+const storeRepository = new StoreRepository(prisma)
 const storeUserRepository = new StoreUserRepository(prisma)
-const repository = new AuthStoreUserRepository(storeUserRepository)
+const repository = new AuthStoreUserRepository(storeUserRepository, storeRepository)
 const controller = new AuthStoreUserController(repository)
 
 authStoreUserRoute.post(
