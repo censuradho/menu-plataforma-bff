@@ -13,9 +13,9 @@ export class CreateProductDTO {
 
   @IsOptional()
   @IsBoolean()
-  visible: string
+  visible: boolean
 
   @IsOptional()
   @IsBoolean()
-  limitAge: string
+  limitAge: boolean
 }
