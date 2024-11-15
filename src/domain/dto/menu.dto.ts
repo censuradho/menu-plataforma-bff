@@ -1,5 +1,6 @@
 import { IsArray, IsString, ValidateNested } from "class-validator";
 import { Type } from 'class-transformer';
+import { CreateProductDTO } from "./product.dto";
 
 export class CreateMenuDTO {
   @IsString()
@@ -7,5 +8,6 @@ export class CreateMenuDTO {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type
+  @Type(() => CreateProductDTO)
+  products: CreateProductDTO[]
 }
