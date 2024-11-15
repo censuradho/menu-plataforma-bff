@@ -1,7 +1,8 @@
 import { CreateMenuGroupDTO } from "@/domain/dto/menuGroup.dto";
 import { PrismaClient } from "@prisma/client";
+import { IMenuGroupRepository } from "./IMenuGroup.repository";
 
-export class MenuGroupRepository {
+export class MenuGroupRepository implements IMenuGroupRepository {
   constructor (
     private prisma: PrismaClient
   ) {}

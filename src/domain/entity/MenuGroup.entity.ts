@@ -14,6 +14,6 @@ type MenuWithProductsEntity  = MenuEntity & {
   products: ProductEntity[]
 }
 
-export type MenuGrouWithMenuAndProducts = MenuGroup & {
+export type MenuGrouWithMenuAndProductsEntity = MenuGroup & {
   menus: MenuWithProductsEntity[]
 }

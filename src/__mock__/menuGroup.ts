@@ -1,5 +1,5 @@
 import { CreateMenuGroupDTO } from "@/domain/dto/menuGroup.dto";
-import { MenuGrouWithMenuAndProducts } from "@/domain/entity/MenuGroup.entity";
+import { MenuGrouWithMenuAndProductsEntity } from "@/domain/entity/MenuGroup.entity";
 
   export const createMenuGroupDTOMock: CreateMenuGroupDTO = {
     "hourFrom": "",
@@ -21,7 +21,7 @@ import { MenuGrouWithMenuAndProducts } from "@/domain/entity/MenuGroup.entity";
     ]
   }
 
-  export const menuGroupWithMenuAndProductsMock: MenuGrouWithMenuAndProducts = {
+  export const menuGroupWithMenuAndProductsMock: MenuGrouWithMenuAndProductsEntity = {
     createdAt: new Date(),
     updatedAt: new Date(),
     hourFrom: 'hourFrom',
