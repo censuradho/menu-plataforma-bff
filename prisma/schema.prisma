@@ -110,6 +110,8 @@ model MenuGroup {
 model Menu {
   id Int @id @default(autoincrement())
 
+  label String
+
   groupId Int
   group MenuGroup @relation(fields: [groupId], references: [id])
 
