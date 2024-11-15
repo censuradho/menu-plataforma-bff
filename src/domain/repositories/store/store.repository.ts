@@ -30,4 +30,26 @@ export class StoreRepository {
       }
     })
   }
+
+  async update (storeId: number, ownerId: string, payload: CreateStoreDTO) {
+    const store= await this.prisma.store.findFirst({
+      where: {
+        ownerId,
+        id: storeId
+      }
+    })
+
+    if (!store) throw new HttpException(404, ERRORS.STORE.NOT_FOUND)
+
+    await this.prisma.store.update({
+      data: {
+        ...payload,
+        updatedAt: new Date()
+      },
+      where: {
+        ownerId,
+        id: storeId,
+      },
+    })
+  }
 }

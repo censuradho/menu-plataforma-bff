@@ -1,13 +1,21 @@
+import { CreateStoreDTO } from "@/domain/dto/store.dto";
 import { StoreEntity } from "@/domain/entity/Store.entity";
 
-export const storeEntityMock: StoreEntity = {
-  cuisineType: 'cuisineType',
-  document: 'document',
-  documentType: 'documentType',
-  establishmentTime: 'establishmentTime',
-  name: 'name',
-  ownerId: 'ownerId',
-  revenueEstimate: 'revenueEstimate',
+export const createStoreDTOMock: CreateStoreDTO = {
+  cuisineType: "cuisineType",
+  document: "document",
+  documentType: "documentType",
+  establishmentTime: "establishmentTime",
+  name: "name",
+  revenueEstimate: "revenueEstimate",
   numberOfEmployees: 10,
-  id: 1
 }
+
+export const storeEntityMock: StoreEntity = {
+  ...createStoreDTOMock,
+  ownerId: "ownerId",
+  id: 1,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+}
+
