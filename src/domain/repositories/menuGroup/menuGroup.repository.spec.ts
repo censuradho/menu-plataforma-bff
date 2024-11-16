@@ -1,13 +1,9 @@
-import { beforeEach, expect, it, vi, describe } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
 
-import { MenuGroupRepository } from "./menuGroup.repository";
-import { StoreRepository } from "@/domain/repositories/store/store.repository";
-import { storeEntityMock } from "@/__mock__/store";
 import { createMenuGroupDTOMock, menuGroupWithMenuAndProductsMock } from "@/__mock__/menuGroup";
-import { HttpException } from "@/domain/models/HttpException";
-import { ERRORS } from "@/shared/errors";
+import { MenuGroupRepository } from "./menuGroup.repository";
 
 vi.mock('@/domain/repositories/store/store.repository')
 

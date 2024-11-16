@@ -19,8 +19,7 @@ export class CreateProductDTO {
   @IsBoolean()
   limitAge: boolean
 }
-
-class DeleteProductItemDTO {
+export class DeleteProductDTO {
   @IsNumber()
   @IsPositive()
   menuId: number
@@ -28,11 +27,8 @@ class DeleteProductItemDTO {
   @IsNumber()
   @IsPositive()
   groupId: number
-}
 
-export class DeleteProductDTO {
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => DeleteProductItemDTO)
-  products: DeleteProductItemDTO[]
+  @IsNumber()
+  @IsPositive()
+  productId: number
 }
