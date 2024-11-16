@@ -7,7 +7,7 @@ export class ProductRepository {
     private prisma: PrismaClient
   ) {}
 
-  async delete (
+  async validate (
     storeId: number,
     productId: number,
     menuId: number,
@@ -18,6 +18,9 @@ export class ProductRepository {
         storeId,
         id: groupId
       },
+      select: {
+        id: true
+      }
     })
 
     if (!groupExist) throw new HttpException(404, ERRORS.MENU_GROUP.NOT_FOUND)
@@ -26,6 +29,9 @@ export class ProductRepository {
       where: {
         id: menuId,
         groupId
+      },
+      select: {
+        id: true
       }
     })
 
@@ -35,10 +41,28 @@ export class ProductRepository {
       where: {
         id: productId,
         menuId
+      },
+      select: {
+        id: true
       }
     })
 
     if (!product) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
+  }
+
+  async delete (
+    storeId: number,
+    productId: number,
+    menuId: number,
+    groupId: number,
+  ) {
+
+    await this.validate(
+      storeId,
+      productId,
+      menuId,
+      groupId
+    )
 
     await this.prisma.product.delete({
       where: {

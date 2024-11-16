@@ -1,5 +1,5 @@
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ProductRepository } from "./Product.repository";
 import e from "express";
 import { HttpException } from "@/domain/models/HttpException";
@@ -11,6 +11,12 @@ describe('ProductRepository', () => {
   let ctx: Context
   let repository: ProductRepository
 
+  const storeId = 1
+  const menuId = 1
+  const groupId = 1
+  const productId = 1
+
+
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
@@ -19,12 +25,7 @@ describe('ProductRepository', () => {
     )
   })
 
-  describe('.delete', () => {
-    const storeId = 1
-    const menuId = 1
-    const groupId = 1
-    const productId = 1
-
+  describe('.validate', () => {
     it ('Should throw an exception if MenuGroupEntity was not founded by storeId and groupId', async () => {
       mock.prisma.menuGroup.findFirst.mockResolvedValue(null)
 
@@ -43,6 +44,9 @@ describe('ProductRepository', () => {
           storeId,
           id: groupId
         },
+        select: {
+          id: true
+        }
       })
     })
 
@@ -64,6 +68,9 @@ describe('ProductRepository', () => {
         where: {
           id: menuId,
           groupId
+        },
+        select: {
+          id: true
         }
       })
     })
@@ -86,18 +93,26 @@ describe('ProductRepository', () => {
         where: {
           id: productId,
           menuId
+        },
+        select: {
+          id: true
         }
       })
     })
 
-    
+  })
+
+  describe('.delete', () => {
     it ('Should delete product', async () => {
       mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
 
+      const validateMethodMock = vi.spyOn(repository, 'validate')
+
       await repository.delete(storeId, productId, menuId, groupId)
 
+      expect(validateMethodMock).toBeCalled()
       expect(mock.prisma.product.delete).toBeCalledWith({
         where: {
           id: productId,
