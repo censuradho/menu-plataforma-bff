@@ -8,8 +8,7 @@ export function uploadSingleFileMiddleware (req: Request, res: Response, next: N
 
   return repository.singleUpload('file')(req, res, error => {
     if (error) {
-
-      req.log.error(error)
+      req.log.error(error, 'uploadSingleFileMiddleware')
 
       return res
         .status(400)

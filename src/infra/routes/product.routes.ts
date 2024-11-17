@@ -24,7 +24,7 @@ productRoutes.delete(
 )
 
 productRoutes.put(
-  '/product/image/:productId/menu/:menuId/menuGroup/:groupId',
+  '/product/:productId/menu/:menuId/menuGroup/:groupId/image',
   storeUserJwtMiddleware,
   uploadSingleFileMiddleware,
   controller.uploadImage.bind(controller)

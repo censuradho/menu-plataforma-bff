@@ -12,7 +12,7 @@ export class FileUploadService {
       destination: (req, files, cb) => {
         cb(
           null, 
-          path.resolve(__dirname, '..', '..', '..', 'shared', 'tmp')
+          path.resolve(__dirname, '..', 'shared', 'tmp')
         )
       },
       filename: (req, file, cb) => {

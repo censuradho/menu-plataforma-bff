@@ -101,6 +101,17 @@ export class ProductRepository {
       groupId,
     )
 
+    const product = await this.prisma.product.findFirst({
+      where: {
+        menuId,
+        id: productId
+      }
+    })
+
+    if (product?.image) {
+      await this.fileUploadService.removeFile(product.image)
+    }
+
     await this.prisma.product.update({
       where: {
         menuId,

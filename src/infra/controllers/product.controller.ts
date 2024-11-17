@@ -36,22 +36,32 @@ export class ProductController {
   }
 
   async uploadImage (req: Request, res: Response) {
-    if (!req.file) return res
+    try {
+      if (!req.file) return res
       .status(400)
       .json({
         message: ERRORS.FILE_UPLOAD.REQUIRED
       })
 
-    const user = req.user as JWTPayload
+      const user = req.user as JWTPayload
 
-    const { productId, menuId, groupId  } = req.params as unknown as DeleteProductDTO
+      const { productId, menuId, groupId  } = req.params as unknown as DeleteProductDTO
 
-    await this.productRepository.updateImage(
-      user.storeId!!,
-      Number(productId),
-      Number(menuId),
-      Number(groupId),
-      req.file
-    )
+      await this.productRepository.updateImage(
+        user.storeId!!,
+        Number(productId),
+        Number(menuId),
+        Number(groupId),
+        req.file
+      )
+      return res.sendStatus(204)
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
   }
 }
