@@ -2,7 +2,6 @@ import { HttpException } from "@/domain/models/HttpException";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
-import { execPath } from "process";
 
 export class ProductRepository {
   constructor (

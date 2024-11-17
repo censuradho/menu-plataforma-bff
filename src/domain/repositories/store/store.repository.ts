@@ -36,7 +36,7 @@ export class StoreRepository {
 
     if (alreadyHaveStore) throw new HttpException(401, ERRORS.STORE.PROVIDED_OWNER_ID_ALREADY_HAVE_STORE)
 
-    await this.prisma.store.create({
+    return await this.prisma.store.create({
       data: {
         cuisineType: payload.cuisineType,
         document: payload.document,

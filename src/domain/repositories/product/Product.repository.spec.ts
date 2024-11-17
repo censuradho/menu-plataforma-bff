@@ -5,11 +5,16 @@ import e from "express";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
 import { menuEntityMock, menuGroupEntityMock, productEntityMock } from "@/__mock__/menuGroup";
+import { FileUploadService } from "@/services/FileUpload.service";
+import { fileMock } from "@/__mock__/file";
+
+vi.mock('@/services/FileUpload.service')
 
 describe('ProductRepository', () => {
   let mock: MockContext
   let ctx: Context
   let repository: ProductRepository
+  let uploadService: FileUploadService
 
   const storeId = 1
   const menuId = 1
@@ -20,8 +25,11 @@ describe('ProductRepository', () => {
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
+    uploadService = new FileUploadService()
+
     repository = new ProductRepository(
-      ctx.prisma
+      ctx.prisma,
+      uploadService
     )
   })
 
@@ -119,6 +127,62 @@ describe('ProductRepository', () => {
           menuId
         }
       })
+    })
+  })
+
+  describe('.updateImage', () => {
+    it ('Should upload image', async () => {
+      mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
+      mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
+      mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
+
+      const validateMethodMock = vi.spyOn(repository, 'validate')
+  
+      await repository.updateImage(
+        storeId,
+        productId,
+        menuId,
+        groupId,
+        fileMock
+      )
+
+      expect(uploadService.removeFile).not.toHaveBeenCalled()
+      expect(validateMethodMock).toBeCalledWith(
+        storeId,
+        productId,
+        menuId,
+        groupId,
+      )
+      expect(mock.prisma.product.update).toHaveBeenCalledWith({
+        where: {
+          menuId,
+          id: productId
+        },
+        data: {
+          image: fileMock.path
+        }
+      })
+    })
+
+    it ('Should remove previous file if product already have an image', async () => {
+      mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
+      mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
+      mock.prisma.product.findFirst.mockResolvedValue({
+        ...productEntityMock,
+        image: fileMock.path
+      })
+
+      const validateMethodMock = vi.spyOn(repository, 'validate')
+
+      await repository.updateImage(
+        storeId,
+        productId,
+        menuId,
+        groupId,
+        fileMock
+      )
+      expect(uploadService.removeFile).toHaveBeenCalled()
+      expect(validateMethodMock).toHaveBeenCalled()
     })
   })
 })

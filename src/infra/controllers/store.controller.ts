@@ -12,7 +12,9 @@ export class StoreController {
     const user = req.user as JWTPayload
 
     try {
-       await this.storeRepository.create(user.id, req.body)
+       const store = await this.storeRepository.create(user.id, req.body)
+
+       req.user!!['storeId'] = store.id
 
        return res.sendStatus(201)
     } catch (error) {
