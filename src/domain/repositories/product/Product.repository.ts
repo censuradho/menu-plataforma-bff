@@ -1,10 +1,13 @@
 import { HttpException } from "@/domain/models/HttpException";
+import { FileUploadService } from "@/services/FileUpload.service";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
+import { execPath } from "process";
 
 export class ProductRepository {
   constructor (
-    private prisma: PrismaClient
+    private prisma: PrismaClient,
+    private fileUploadService: FileUploadService
   ) {}
 
   async validate (
@@ -56,7 +59,6 @@ export class ProductRepository {
     menuId: number,
     groupId: number,
   ) {
-
     await this.validate(
       storeId,
       productId,
@@ -64,10 +66,48 @@ export class ProductRepository {
       groupId
     )
 
+    const product = await this.prisma.product.findFirst({
+      where: {
+        id: productId,
+        menuId
+      }
+    })
+
+    if (!product) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
+
+    if (product.image) {
+      await this.fileUploadService.removeFile(product.image)
+    }
+    
     await this.prisma.product.delete({
       where: {
         id: productId,
         menuId
+      }
+    })
+  }
+
+  async updateImage (
+    storeId: number,
+    productId: number,
+    menuId: number,
+    groupId: number,
+    file: Express.Multer.File
+  ) {
+    await this.validate(
+      storeId,
+      productId,
+      menuId,
+      groupId,
+    )
+
+    await this.prisma.product.update({
+      where: {
+        menuId,
+        id: productId
+      },
+      data: {
+        image: file.path
       }
     })
   }

@@ -18,5 +18,8 @@ export const ERRORS = {
   },
   PRODUCT: {
     NOT_FOUND: 'PRODUCT_NOT_FOUND'
+  },
+  FILE_UPLOAD: {
+    REQUIRED: 'FILE_UPLOAD_FIELD_FILE_IS_REQUIRED'
   }
 }

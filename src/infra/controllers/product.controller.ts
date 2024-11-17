@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { ProductRepository } from './../../domain/repositories/product/Product.repository';
+
+import { ProductRepository } from '@/domain/repositories/product/Product.repository';
 import { HttpException } from '@/domain/models/HttpException';
 import { JWTPayload } from '@/domain/models/JWTPayload';
 import { DeleteProductDTO } from '@/domain/dto/product.dto';
+import { ERRORS } from '@/shared/errors';
 
 export class ProductController {
   constructor (
@@ -31,5 +33,25 @@ export class ProductController {
 
       return res.sendStatus(500)   
     }
+  }
+
+  async uploadImage (req: Request, res: Response) {
+    if (!req.file) return res
+      .status(400)
+      .json({
+        message: ERRORS.FILE_UPLOAD.REQUIRED
+      })
+
+    const user = req.user as JWTPayload
+
+    const { productId, menuId, groupId  } = req.params as unknown as DeleteProductDTO
+
+    await this.productRepository.updateImage(
+      user.storeId!!,
+      Number(productId),
+      Number(menuId),
+      Number(groupId),
+      req.file
+    )
   }
 }
