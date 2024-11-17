@@ -5,6 +5,7 @@ import { prisma } from "@/services/PrismaClient";
 import { deleteManyProductValidation } from "../middleware/product.validation";
 import { storeUserJwtMiddleware } from "../middleware/auth/storeUserJWT.middleware";
 import { FileUploadService } from "@/services/FileUpload.service";
+import { uploadSingleFileMiddleware } from "../middleware/fileUpload.middleware";
 
 
 const productRoutes = Router()
@@ -25,6 +26,7 @@ productRoutes.delete(
 productRoutes.put(
   '/product/image/:productId/menu/:menuId/menuGroup/:groupId',
   storeUserJwtMiddleware,
+  uploadSingleFileMiddleware,
   controller.uploadImage.bind(controller)
 )
 
