@@ -15,13 +15,12 @@ export class ProductController {
     try {
       const user = req.user as JWTPayload
       
-      const { productId, menuId, groupId  } = req.params as unknown as DeleteProductDTO
+      const { productId, menuId  } = req.params as unknown as DeleteProductDTO
 
       await this.productRepository.delete(
         user.storeId!!,
         Number(productId),
-        Number(menuId),
-        Number(groupId)
+        Number(menuId)
       )
 
       return res.sendStatus(204)
@@ -45,13 +44,12 @@ export class ProductController {
 
       const user = req.user as JWTPayload
 
-      const { productId, menuId, groupId  } = req.params as unknown as DeleteProductDTO
+      const { productId, menuId  } = req.params as unknown as DeleteProductDTO
 
       await this.productRepository.updateImage(
         user.storeId!!,
         Number(productId),
         Number(menuId),
-        Number(groupId),
         req.file
       )
       return res.sendStatus(204)

@@ -26,9 +26,5 @@ export class DeleteProductDTO {
 
   @IsNumber()
   @IsPositive()
-  groupId: number
-
-  @IsNumber()
-  @IsPositive()
   productId: number
 }

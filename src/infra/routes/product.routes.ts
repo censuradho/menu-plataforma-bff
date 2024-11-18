@@ -17,14 +17,14 @@ const repository = new ProductRepository(
 const controller = new ProductController(repository)
 
 productRoutes.delete(
-  '/product/:productId/menu/:menuId/menuGroup/:groupId',
+  '/product/:productId/menu/:menuId',
   storeUserJwtMiddleware,
   deleteManyProductValidation,
   controller.delete.bind(controller)
 )
 
 productRoutes.put(
-  '/product/:productId/menu/:menuId/menuGroup/:groupId/image',
+  '/product/:productId/menu/:menuId/image',
   storeUserJwtMiddleware,
   uploadSingleFileMiddleware,
   controller.uploadImage.bind(controller)
