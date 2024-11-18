@@ -4,7 +4,7 @@ import { ProductRepository } from "./Product.repository";
 import e from "express";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
-import { menuEntityMock, menuGroupEntityMock, productEntityMock } from "@/__mock__/menuGroup";
+import { menuEntityMock, productEntityMock } from "@/__mock__/menu";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { fileMock } from "@/__mock__/file";
 
@@ -41,7 +41,7 @@ describe('ProductRepository', () => {
       await expect(request).rejects.toThrowError(
         expect.objectContaining({
           status: 404,
-          message: ERRORS.MENU_GROUP.NOT_FOUND
+          message: ERRORS.MENU.NOT_FOUND
         })
       )
 
@@ -57,7 +57,7 @@ describe('ProductRepository', () => {
     })
 
     it ('Should throw an exception if MenuEntity was not founded by groupId and menuId', async () => {
-      mock.prisma.menu.findFirst.mockResolvedValue(menuGroupEntityMock)
+      mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
 
       mock.prisma.menu.findFirst.mockResolvedValue(null)
 
