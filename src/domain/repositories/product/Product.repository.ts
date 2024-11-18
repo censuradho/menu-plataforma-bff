@@ -12,25 +12,14 @@ export class ProductRepository {
   async validate (
     storeId: number,
     productId: number,
-    menuId: number,
-    groupId: number,
+    menuId: number
   ) {
-    const groupExist = await this.prisma.menuGroup.findFirst({
-      where: {
-        storeId,
-        id: groupId
-      },
-      select: {
-        id: true
-      }
-    })
-
-    if (!groupExist) throw new HttpException(404, ERRORS.MENU_GROUP.NOT_FOUND)
+ 
 
     const menu = await this.prisma.menu.findFirst({
       where: {
         id: menuId,
-        groupId
+        storeId
       },
       select: {
         id: true
@@ -56,13 +45,11 @@ export class ProductRepository {
     storeId: number,
     productId: number,
     menuId: number,
-    groupId: number,
   ) {
     await this.validate(
       storeId,
       productId,
       menuId,
-      groupId
     )
 
     const product = await this.prisma.product.findFirst({
@@ -90,14 +77,12 @@ export class ProductRepository {
     storeId: number,
     productId: number,
     menuId: number,
-    groupId: number,
     file: Express.Multer.File
   ) {
     await this.validate(
       storeId,
       productId,
       menuId,
-      groupId,
     )
 
     const product = await this.prisma.product.findFirst({

@@ -18,7 +18,6 @@ describe('ProductRepository', () => {
 
   const storeId = 1
   const menuId = 1
-  const groupId = 1
   const productId = 1
 
 
@@ -35,9 +34,8 @@ describe('ProductRepository', () => {
 
   describe('.validate', () => {
     it ('Should throw an exception if MenuGroupEntity was not founded by storeId and groupId', async () => {
-      mock.prisma.menuGroup.findFirst.mockResolvedValue(null)
 
-      const request = repository.delete(storeId, productId, menuId, groupId)
+      const request = repository.delete(storeId, productId, menuId)
       
       await expect(request).rejects.toBeInstanceOf(HttpException)
       await expect(request).rejects.toThrowError(
@@ -47,10 +45,10 @@ describe('ProductRepository', () => {
         })
       )
 
-      expect(mock.prisma.menuGroup.findFirst).toHaveBeenCalledWith({
+      expect(mock.prisma.menu.findFirst).toHaveBeenCalledWith({
         where: {
           storeId,
-          id: groupId
+          id: menuId
         },
         select: {
           id: true
@@ -59,11 +57,11 @@ describe('ProductRepository', () => {
     })
 
     it ('Should throw an exception if MenuEntity was not founded by groupId and menuId', async () => {
-      mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
+      mock.prisma.menu.findFirst.mockResolvedValue(menuGroupEntityMock)
 
       mock.prisma.menu.findFirst.mockResolvedValue(null)
 
-      const request = repository.delete(storeId, productId, menuId, groupId)
+      const request = repository.delete(storeId, productId, menuId)
 
       await expect(request).rejects.toBeInstanceOf(HttpException)
       await expect(request).rejects.toThrowError(
@@ -75,7 +73,7 @@ describe('ProductRepository', () => {
       expect(mock.prisma.menu.findFirst).toHaveBeenCalledWith({
         where: {
           id: menuId,
-          groupId
+          storeId
         },
         select: {
           id: true
@@ -84,11 +82,10 @@ describe('ProductRepository', () => {
     })
 
     it ('Should throw an exception if ProductEntity was not founded by productId and menuId', async () => {
-      mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(null)
 
-      const request = repository.delete(storeId, productId, menuId, groupId)
+      const request = repository.delete(storeId, productId, menuId)
 
       await expect(request).rejects.toBeInstanceOf(HttpException)
       await expect(request).rejects.toThrowError(
@@ -112,13 +109,12 @@ describe('ProductRepository', () => {
 
   describe('.delete', () => {
     it ('Should delete product', async () => {
-      mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
 
       const validateMethodMock = vi.spyOn(repository, 'validate')
 
-      await repository.delete(storeId, productId, menuId, groupId)
+      await repository.delete(storeId, productId, menuId)
 
       expect(validateMethodMock).toBeCalled()
       expect(mock.prisma.product.delete).toBeCalledWith({
@@ -132,7 +128,6 @@ describe('ProductRepository', () => {
 
   describe('.updateImage', () => {
     it ('Should upload image', async () => {
-      mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
 
@@ -142,7 +137,6 @@ describe('ProductRepository', () => {
         storeId,
         productId,
         menuId,
-        groupId,
         fileMock
       )
 
@@ -151,7 +145,6 @@ describe('ProductRepository', () => {
         storeId,
         productId,
         menuId,
-        groupId,
       )
       expect(mock.prisma.product.update).toHaveBeenCalledWith({
         where: {
@@ -165,7 +158,6 @@ describe('ProductRepository', () => {
     })
 
     it ('Should remove previous file if product already have an image', async () => {
-      mock.prisma.menuGroup.findFirst.mockResolvedValue(menuGroupEntityMock)
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue({
         ...productEntityMock,
@@ -178,7 +170,6 @@ describe('ProductRepository', () => {
         storeId,
         productId,
         menuId,
-        groupId,
         fileMock
       )
       expect(uploadService.removeFile).toHaveBeenCalled()
