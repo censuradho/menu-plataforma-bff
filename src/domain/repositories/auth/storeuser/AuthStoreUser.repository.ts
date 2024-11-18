@@ -1,15 +1,19 @@
+import { compare } from 'bcrypt';
+
 import { IsValidEmailDTO, SignInWithEmailAndPasswordDTO } from '@/domain/dto/authStoreuser.dto';
 import { CreateStoreUserDTO } from '@/domain/dto/StoreUser.dto';
 import { StoreUserEntity } from '@/domain/entity/StoreUser.entity';
 import { HttpException } from '@/domain/models/HttpException';
 import { JWTPayload } from '@/domain/models/JWTPayload';
 import { StoreUserRepository } from '@/domain/repositories/storeUser/User.repository';
+import { StoreUserModel } from '@/domain/models/StoreUserModel';
+import { StoreRepository } from '@/domain/repositories/store/store.repository';
+
+
 import { ERRORS } from '@/shared/errors';
 import { Jwt } from '@/shared/jwt';
-import { compare } from 'bcrypt';
+
 import { IAuthStoreUserRepository } from './IAuthStoreUser.repository';
-import { StoreUserModel } from '@/domain/models/StoreUserModel';
-import { StoreRepository } from '../../store/store.repository';
 
 export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   constructor (
