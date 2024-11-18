@@ -4,14 +4,14 @@ import { MenuGroupRepository } from "@/domain/repositories/menuGroup/menuGroup.r
 
 import { prisma } from "@/services/PrismaClient";
 
-import { MenuGroupController } from "@/infra/controllers/menuGroup.controller";
+import { MenuController } from "@/infra/controllers/menu.controller";
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
 import { createMenuGroupValidation } from "@/infra/middleware/menuGroup.validation";
 
 const menuGroupRoutes = Router()
 
 const repository = new MenuGroupRepository(prisma)
-const controller = new MenuGroupController(repository)
+const controller = new MenuController(repository)
 
 menuGroupRoutes.post(
   '/menu-group', 

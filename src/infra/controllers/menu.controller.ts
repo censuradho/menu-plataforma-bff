@@ -1,20 +1,20 @@
 import { HttpException } from '@/domain/models/HttpException';
 import { JWTPayload } from '@/domain/models/JWTPayload';
-import { MenuGroupRepository } from '@/domain/repositories/menuGroup/menuGroup.repository';
+import { MenuRepository } from '@/domain/repositories/menu/Menu.repository';
 import { Request, Response } from 'express';
 
-export class MenuGroupController {
+export class MenuController {
   constructor (
-    private menuGroupRepository: MenuGroupRepository
+    private menuRepository: MenuRepository
   ) {}
 
   async upsert (req: Request, res: Response) {
     try {
       const user = req.user as JWTPayload
 
-      const menuGroup = await this.menuGroupRepository.upsert(user.storeId!!, req.body)
+      const data = await this.menuRepository.upsert(user.storeId!!, req.body)
 
-      return res.status(201).json(menuGroup)
+      return res.status(201).json(data)
 
     } catch (error) {
       req.log.error(error)
@@ -30,9 +30,9 @@ export class MenuGroupController {
     try {
       const user = req.user as JWTPayload
 
-      const menuGroup = await this.menuGroupRepository.findMany(user.storeId!!)
+      const data = await this.menuRepository.findMany(user.storeId!!)
 
-      return res.status(201).json(menuGroup)
+      return res.status(201).json(data)
 
     } catch (error) {
       req.log.error(error)
