@@ -32,32 +32,29 @@ CREATE TABLE "operationModes" (
 CREATE TABLE "stores" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
-    "ownerId" TEXT NOT NULL,
     "document" TEXT NOT NULL,
     "documentType" TEXT NOT NULL,
     "cuisineType" TEXT NOT NULL,
     "establishmentTime" TEXT NOT NULL,
     "revenueEstimate" TEXT NOT NULL,
     "numberOfEmployees" INTEGER NOT NULL DEFAULT 0,
-    CONSTRAINT "stores_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "menuGroups" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "label" TEXT NOT NULL,
-    "visible" BOOLEAN NOT NULL DEFAULT true,
-    "hourFrom" TEXT,
-    "hourTo" TEXT,
+    "ownerId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "stores_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "menus" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "groupId" INTEGER NOT NULL,
-    CONSTRAINT "menus_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "menuGroups" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "label" TEXT NOT NULL,
+    "visible" BOOLEAN NOT NULL DEFAULT true,
+    "storeId" INTEGER NOT NULL,
+    "hourFrom" TEXT,
+    "hourTo" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "menus_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -69,6 +66,8 @@ CREATE TABLE "products" (
     "visible" BOOLEAN NOT NULL DEFAULT true,
     "limitAge" BOOLEAN NOT NULL DEFAULT false,
     "menuId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "products_menuId_fkey" FOREIGN KEY ("menuId") REFERENCES "menus" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -79,6 +78,8 @@ CREATE TABLE "productCustomPrice" (
     "code" TEXT NOT NULL,
     "active" BOOLEAN NOT NULL,
     "productId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "productCustomPrice_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 

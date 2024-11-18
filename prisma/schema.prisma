@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -68,7 +62,6 @@ model Store {
 
   establishmentTime String
 
-
   revenueEstimate String
 
   numberOfEmployees Int @default(0)
@@ -77,9 +70,10 @@ model Store {
   owner StoreUser @relation(fields: [ownerId], references: [id])
 
   staffs StoreStaff[]
+
   operationMode OperationMode[]
 
-  menuGroups MenuGroup[]
+  menus Menu[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -87,35 +81,21 @@ model Store {
   @@map("stores")
 }
 
-model MenuGroup {
-  id Int @id @default(autoincrement())
-
-  label String
-
-  visible Boolean @default(true)
-
-  storeId Int
-  store Store @relation(fields: [storeId], references: [id])
-  menus Menu[]
-
-  hourFrom String?
-  hourTo String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@map("menuGroups")
-}
 
 model Menu {
   id Int @id @default(autoincrement())
 
   label String
 
-  groupId Int
-  group MenuGroup @relation(fields: [groupId], references: [id])
+  visible Boolean @default(true)
 
   products Product[]
+
+  storeId Int
+  store Store @relation(fields: [storeId], references: [id])
+
+  hourFrom String?
+  hourTo String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
