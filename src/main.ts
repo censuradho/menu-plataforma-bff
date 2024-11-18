@@ -18,7 +18,6 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(cors(corsConfig))
 app.use(routes)
-app.disable('x-powered-by')
 
 app.listen(environment.PORT, () => {
   console.log(`Listen on PORT: ${environment.PORT}/`);
