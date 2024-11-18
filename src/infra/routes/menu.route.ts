@@ -1,31 +1,31 @@
 import { Router } from "express";
 
-import { MenuGroupRepository } from "@/domain/repositories/menuGroup/menuGroup.repository";
 
 import { prisma } from "@/services/PrismaClient";
 
 import { MenuController } from "@/infra/controllers/menu.controller";
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
-import { createMenuGroupValidation } from "@/infra/middleware/menuGroup.validation";
+import { createMenuValidation } from "@/infra/middleware/menu.validation";
+import { MenuRepository } from "@/domain/repositories/menu/Menu.repository";
 
-const menuGroupRoutes = Router()
+const menuRoutes = Router()
 
-const repository = new MenuGroupRepository(prisma)
+const repository = new MenuRepository(prisma)
 const controller = new MenuController(repository)
 
-menuGroupRoutes.post(
-  '/menu-group', 
+menuRoutes.post(
+  '/menu', 
   storeUserJwtMiddleware,
-  createMenuGroupValidation,
+  createMenuValidation,
   controller.upsert.bind(controller)
 )
 
-menuGroupRoutes.get(
-  '/menu-group', 
+menuRoutes.get(
+  '/menu', 
   storeUserJwtMiddleware,
   controller.findMany.bind(controller)
 )
 
 export {
-  menuGroupRoutes
+  menuRoutes
 };
