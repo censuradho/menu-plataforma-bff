@@ -5,5 +5,5 @@ config()
 
 export const environment = {
   PORT: process.env.PORT,
-  CORS: process.env.CORS?.split(',')
+  CORS: process.env.CORS
 }

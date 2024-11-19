@@ -28,7 +28,7 @@ export class StoreUserRepository implements IStoreUSerRepository {
     const id = randomUUID()
 
 
-    await this.prisma.storeUser.create({
+    return await this.prisma.storeUser.create({
       data: {
         id,
         ...otherPayload,
@@ -36,7 +36,6 @@ export class StoreUserRepository implements IStoreUSerRepository {
       }
     })
 
-    return id
   }
 
   async findById (id: string) {

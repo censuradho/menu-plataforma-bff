@@ -8,11 +8,10 @@ export async function deleteManyProductValidation (req: Request, res: Response, 
   })
 
   try {
-    const { productId = '0', menuId = '0', groupId = '0' } = (req.params || {}) as unknown as DeleteProductDTO
+    const { productId = '0', menuId = '0'  } = (req.params || {}) as unknown as DeleteProductDTO
 
     const validation = new DeleteProductDTO()
   
-    validation.groupId = Number(groupId)
     validation.menuId = Number(menuId)
     validation.productId = Number(productId)
 

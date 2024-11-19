@@ -6,5 +6,5 @@ export interface IAuthStoreUserRepository {
   isValidEmail(payload: IsValidEmailDTO): Promise<boolean>
   me(id: string): Promise<StoreUserModel | null>
   signInWithEmailAndPassword(payload: SignInWithEmailAndPasswordDTO): Promise<string>
-  signUpWithEmailAndPassword(payload: CreateStoreUserDTO): Promise<void>
+  signUpWithEmailAndPassword(payload: CreateStoreUserDTO): Promise<string>
 }

@@ -3,6 +3,6 @@ import { StoreUserEntity } from "@/domain/entity/StoreUser.entity";
 
 export interface IStoreUSerRepository {
   findByEmail(email: string): Promise<StoreUserEntity | null>
-  create(payload: CreateStoreUserDTO): Promise<string>
+  create(payload: CreateStoreUserDTO): Promise<StoreUserEntity>
   findById(id: string): Promise<StoreUserEntity | null>
 }

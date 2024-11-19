@@ -13,15 +13,18 @@ export class AuthStoreUserController {
   private generateAuthCookie (cookie: string, res: Response) {
     res.cookie('auth', cookie, {
       secure: process.env.NODE_ENV !== 'development',
-      httpOnly: true,
-      sameSite: 'strict',
-      expires: addDays(new Date(), 2)
+      httpOnly: process.env.NODE_ENV !== 'development',
+      expires: addDays(new Date(), 2),
+      sameSite: 'none',
+      path: '/'
     })
   }
 
   async signUpWithEmailAndPassword (req: Request, res: Response) {
     try {
-      await this.authStoreUserRepository.signUpWithEmailAndPassword(req.body)
+      const token = await this.authStoreUserRepository.signUpWithEmailAndPassword(req.body)
+
+      this.generateAuthCookie(token, res)
 
       return res.sendStatus(201)
     } catch (error) {

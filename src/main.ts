@@ -12,8 +12,9 @@ import { routes } from './infra/routes/routes'
 
 const app = express()
 
+console.log(corsConfig)
 app.use(loggerHttp)
-app.use(helmet())
+// app.use(helmet())
 app.use(cookieParser())
 app.use(express.json())
 app.use(cors(corsConfig))

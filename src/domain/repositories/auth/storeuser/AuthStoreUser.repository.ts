@@ -22,7 +22,9 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   ) {}
 
   async signUpWithEmailAndPassword(payload: CreateStoreUserDTO) {
-    await this.storeUserRepository.create(payload)
+    const entity = await this.storeUserRepository.create(payload)
+
+    return this.generateJWT(entity)
   }
 
   async isValidEmail (payload: IsValidEmailDTO) {
