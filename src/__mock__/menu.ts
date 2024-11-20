@@ -18,6 +18,7 @@ export const productEntityMock: ProductEntity = {
   limitAge: true,
   menuId: 1,
   value: '100',
+  description: '',
   visible: true,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -34,6 +35,7 @@ export const menuWithProductsMockEntity: MenuWithProductsEntity = {
   storeId: 1,
   products: [
     {
+      description: '',
       id: 1,
       image: null,
       label: 'label',

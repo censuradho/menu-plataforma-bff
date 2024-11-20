@@ -15,7 +15,10 @@ export async function storeUserJwtMiddleware (req: Request<any, any, JWTPayload>
 
     const payload = Jwt.verifyAccessToken(token) as JWTPayload
   
-    req.user = payload
+    req.user = {
+      ...(req?.user && req.user),
+      ...payload,
+    }
 
     next()
   } catch (error: any) {

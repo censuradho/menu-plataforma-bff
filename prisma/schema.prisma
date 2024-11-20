@@ -107,6 +107,7 @@ model Product {
   id Int @id @default(autoincrement())
 
   label String
+  description String?
   
   value String
 

@@ -8,6 +8,11 @@ export class CreateProductDTO {
   @IsString()
   label: string
 
+    
+  @IsOptional()
+  @IsString()
+  description?: string
+
   @IsString()
   value: string
 

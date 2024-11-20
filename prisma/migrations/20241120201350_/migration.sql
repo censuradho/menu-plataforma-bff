@@ -61,6 +61,7 @@ CREATE TABLE "menus" (
 CREATE TABLE "products" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "label" TEXT NOT NULL,
+    "description" TEXT,
     "value" TEXT NOT NULL,
     "image" TEXT,
     "visible" BOOLEAN NOT NULL DEFAULT true,

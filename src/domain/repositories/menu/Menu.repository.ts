@@ -31,6 +31,7 @@ export class MenuRepository implements IMenuRepository {
               id: product?.id || 0
             },
             update: {
+              description: product?.description,
               label: product.label,
               limitAge: product.limitAge,
               value: product.value,
@@ -39,6 +40,7 @@ export class MenuRepository implements IMenuRepository {
             },
             create: {
               label: product.label,
+              description: product?.description,
               limitAge: product.limitAge,
               value: product.value,
               visible: product.visible,
@@ -55,6 +57,7 @@ export class MenuRepository implements IMenuRepository {
         products: {
           create: payload.products.map(product => ({
             label: product.label,
+            description: product?.description,
             limitAge: product.limitAge,
             value: product.value,
             visible: product.visible,
