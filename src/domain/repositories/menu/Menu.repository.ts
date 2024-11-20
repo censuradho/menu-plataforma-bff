@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { IMenuRepository } from "./IMenu.repository";
 import { CreateMenuDTO } from "@/domain/dto/menu.dto";
+import { HttpException } from "@/domain/models/HttpException";
+import { ERRORS } from "@/shared/errors";
 
 export class MenuRepository implements IMenuRepository {
   constructor (
@@ -72,7 +74,30 @@ export class MenuRepository implements IMenuRepository {
       },
       include: {
         products: true
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
+  }
+
+  async findById(storeId: number, menuId: number) {
+    const entity =  this.prisma.menu.findFirst({
+      where: {
+        storeId,
+        id: menuId
+      },
+      include: {
+        products: {
+          orderBy: {
+            createdAt: 'desc'
+          }
+        }
+      },
+    })
+
+    if (!entity) throw new HttpException(404, ERRORS.MENU.NOT_FOUND)
+
+      return entity
   }
 }

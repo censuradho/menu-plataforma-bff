@@ -26,6 +26,12 @@ menuRoutes.get(
   controller.findMany.bind(controller)
 )
 
+menuRoutes.get(
+  '/menu/:id', 
+  storeUserJwtMiddleware,
+  controller.findById.bind(controller)
+)
+
 export {
   menuRoutes
 };
