@@ -82,7 +82,7 @@ export class MenuRepository implements IMenuRepository {
   }
 
   async findById(storeId: number, menuId: number) {
-    const entity =  this.prisma.menu.findFirst({
+    const entity = await this.prisma.menu.findFirst({
       where: {
         storeId,
         id: menuId
@@ -99,5 +99,25 @@ export class MenuRepository implements IMenuRepository {
     if (!entity) throw new HttpException(404, ERRORS.MENU.NOT_FOUND)
 
       return entity
+  }
+
+  async findProductById (storeId: number, menuId: number, productId: number) {
+    const entity = await this.prisma.menu.findFirst({
+      where: {
+        storeId,
+        id: menuId
+      },
+      select: {
+        products: {
+          where: {
+            id: productId
+          }
+        }
+      }
+    })
+
+    if (!entity) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
+
+    return entity.products
   }
 }

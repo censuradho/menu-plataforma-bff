@@ -27,10 +27,18 @@ menuRoutes.get(
 )
 
 menuRoutes.get(
+  '/menu/:menuId/product/:id', 
+  storeUserJwtMiddleware,
+  controller.findProductById.bind(controller)
+)
+
+menuRoutes.get(
   '/menu/:id', 
   storeUserJwtMiddleware,
   controller.findById.bind(controller)
 )
+
+
 
 export {
   menuRoutes
