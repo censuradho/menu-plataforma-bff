@@ -118,6 +118,8 @@ export class MenuRepository implements IMenuRepository {
 
     if (!entity) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
 
-    return entity.products
+    const [product] = entity.products
+
+    return product
   }
 }
