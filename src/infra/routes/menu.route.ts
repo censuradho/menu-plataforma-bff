@@ -17,6 +17,7 @@ const controller = new MenuController(repository)
 menuRoutes.post(
   '/menu', 
   storeUserJwtMiddleware,
+  storeMiddleware,
   createMenuValidation,
   controller.upsert.bind(controller)
 )
