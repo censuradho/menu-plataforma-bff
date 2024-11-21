@@ -1,5 +1,14 @@
 import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsNumber, IsOptional, IsPositive, IsString, IsUrl, ValidateNested } from "class-validator";
+import { 
+  IsArray, 
+  IsBoolean, 
+  IsNumber, 
+  IsOptional, 
+  IsPositive, 
+  IsString, 
+  IsUrl, 
+  ValidateNested 
+} from "class-validator";
 
 export class CreateProductDTO {
   @IsOptional()
@@ -31,4 +40,11 @@ export class DeleteProductDTO {
   @IsNumber()
   @IsPositive()
   productId: number
+}
+
+export class DeleteManyProductsDTO {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => DeleteProductDTO)
+  products: DeleteProductDTO[]
 }

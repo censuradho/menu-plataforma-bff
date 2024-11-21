@@ -1,3 +1,4 @@
+import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { ERRORS } from "@/shared/errors";
@@ -71,6 +72,34 @@ export class ProductRepository {
         menuId
       }
     })
+  }
+
+  async deleteMany (storeId: number, payload: DeleteManyProductsDTO) {
+    const requests = payload.products.map(product => 
+      this.prisma.store.update({
+        where: {
+          id: storeId,
+        },
+        data: {
+          menus: {
+            update: {
+              where: {
+                id: product.menuId
+              },
+              data: {
+                products: {
+                  delete: {
+                    id: product.productId
+                  }
+                }
+              }
+            },
+          }
+        }
+      })
+    )
+
+    await Promise.all(requests)
   }
 
   async updateImage (

@@ -34,6 +34,21 @@ export class ProductController {
     }
   }
 
+  async deleteMany (req: Request, res: Response) {
+    try {
+      const user = req.user as JWTPayload
+
+      await this.productRepository.deleteMany(
+        user.storeId!!,
+        req.body
+      )
+  
+      return res.sendStatus(204)
+    } catch (error) {
+      return res.sendStatus(500)   
+    }
+  }
+
   async uploadImage (req: Request, res: Response) {
     try {
       if (!req.file) return res
