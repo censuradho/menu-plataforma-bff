@@ -125,13 +125,14 @@ export class ProductRepository {
       await this.fileUploadService.removeFile(product.image)
     }
 
+
     await this.prisma.product.update({
       where: {
         menuId,
         id: productId
       },
       data: {
-        image: file.path
+        image: file.filename
       }
     })
   }
