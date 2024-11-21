@@ -73,7 +73,7 @@ export class MenuRepository implements IMenuRepository {
   async findMany (storeId: number) {
     return this.prisma.menu.findMany({
       where: {
-        storeId
+        storeId,
       },
       include: {
         products: true

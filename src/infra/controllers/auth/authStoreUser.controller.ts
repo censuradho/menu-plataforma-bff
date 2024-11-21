@@ -11,6 +11,7 @@ export class AuthStoreUserController {
   ) {}
 
   private generateAuthCookie (cookie: string, res: Response) {
+    res.clearCookie('auth')
     res.cookie('auth', cookie, {
       secure: process.env.NODE_ENV !== 'development',
       httpOnly: process.env.NODE_ENV !== 'development',

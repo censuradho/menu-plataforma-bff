@@ -7,7 +7,6 @@ export class CreateProductDTO {
   
   @IsString()
   label: string
-
     
   @IsOptional()
   @IsString()
