@@ -83,6 +83,19 @@ export class MenuController {
 
       return res.sendStatus(500)   
     }
+  }
 
+  async delete (req: Request, res: Response) {
+    const { id  } = req.params
+    const user = req.user as JWTPayload
+
+    try {
+      await this.menuRepository.delete(user.storeId!!, Number(id))
+    
+      return res.sendStatus(204)
+    } catch (error) {
+      req.log.error(error)
+      return res.sendStatus(500)   
+    }
   }
 }

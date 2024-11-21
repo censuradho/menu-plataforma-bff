@@ -125,4 +125,30 @@ export class MenuRepository implements IMenuRepository {
 
     return product
   }
+
+  async delete (storeId: number, menuId: number) {
+   
+    await this.prisma.store.update({
+      where: {
+        id: storeId
+      },
+      data: {
+        menus: {
+          update: {
+            where: {
+              id: menuId
+            },
+            data: {
+              products: {
+                deleteMany: {}
+              }
+            }
+          },
+          delete: {
+            id: menuId,
+          }
+        }
+      }
+    })
+  }
 }

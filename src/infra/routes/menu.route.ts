@@ -43,6 +43,13 @@ menuRoutes.get(
   controller.findById.bind(controller)
 )
 
+menuRoutes.delete(
+  '/menu/:id', 
+  storeUserJwtMiddleware,
+  storeMiddleware,
+  controller.delete.bind(controller)
+)
+
 export {
   menuRoutes
 };
