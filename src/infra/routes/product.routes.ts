@@ -6,6 +6,7 @@ import { deleteManyProductValidation } from "../middleware/product.validation";
 import { storeUserJwtMiddleware } from "../middleware/auth/storeUserJWT.middleware";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { uploadSingleFileMiddleware } from "../middleware/fileUpload.middleware";
+import { storeMiddleware } from "../middleware/auth/store.middleware";
 
 
 const productRoutes = Router()
@@ -19,6 +20,7 @@ const controller = new ProductController(repository)
 productRoutes.delete(
   '/product/:productId/menu/:menuId',
   storeUserJwtMiddleware,
+  storeMiddleware,
   deleteManyProductValidation,
   controller.delete.bind(controller)
 )
@@ -26,6 +28,7 @@ productRoutes.delete(
 productRoutes.put(
   '/product/:productId/menu/:menuId/image',
   storeUserJwtMiddleware,
+  storeMiddleware,
   uploadSingleFileMiddleware,
   controller.uploadImage.bind(controller)
 )
