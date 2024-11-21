@@ -8,7 +8,6 @@ authRoutes.use(
   authStoreUserRoute
 )
 
-
 export {
   authRoutes
 };

@@ -43,8 +43,6 @@ menuRoutes.get(
   controller.findById.bind(controller)
 )
 
-
-
 export {
   menuRoutes
 };
