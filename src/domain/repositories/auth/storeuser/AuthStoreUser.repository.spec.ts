@@ -8,6 +8,7 @@ import { createStoreUserDTOPayloadMock, loginStoreUserDTOMock, storeUserEntityMo
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
 import { StoreUserModel } from "@/domain/models/StoreUserModel";
+import { storeEntityMock } from '@/__mock__/store';
 
 vi.mock('@/domain/repositories/storeUser/User.repository')
 vi.mock('@/domain/repositories/store/store.repository')
@@ -34,6 +35,9 @@ describe('AuthStoreUserRepository', () => {
 
   describe('.signUpWithEmailAndPassword', () => {
     it ('Should sign up with email and password', async () => {
+      vi.mocked(storeUserRepository.create).mockResolvedValue(
+        storeUserEntityMock
+      )
 
       await repository.signUpWithEmailAndPassword(createStoreUserDTOPayloadMock)
 

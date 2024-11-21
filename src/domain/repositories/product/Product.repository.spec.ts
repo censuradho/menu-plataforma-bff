@@ -4,7 +4,7 @@ import { ProductRepository } from "./Product.repository";
 import e from "express";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
-import { menuEntityMock, productEntityMock } from "@/__mock__/menu";
+import { deleteManyProductsPayloadMock, menuEntityMock, productEntityMock } from "@/__mock__/menu";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { fileMock } from "@/__mock__/file";
 
@@ -123,6 +123,15 @@ describe('ProductRepository', () => {
           menuId
         }
       })
+    })
+  })
+
+  describe('.deleteMany', () => {
+    it ('Should delete many products', async () => {
+
+      await repository.deleteMany(storeId, deleteManyProductsPayloadMock)
+
+      expect(mock.prisma.store.update).toHaveBeenCalledTimes(deleteManyProductsPayloadMock.products.length)
     })
   })
 

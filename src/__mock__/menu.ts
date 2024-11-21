@@ -1,3 +1,4 @@
+import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { MenuEntity, MenuWithProductsEntity, ProductEntity } from "@/domain/entity/Menu.entity";
 
 export const menuEntityMock: MenuEntity = {
@@ -45,6 +46,19 @@ export const menuWithProductsMockEntity: MenuWithProductsEntity = {
       visible: true,
       createdAt: new Date(),
       updatedAt: new Date(),
+    }
+  ]
+}
+
+export const deleteManyProductsPayloadMock: DeleteManyProductsDTO = {
+  products: [
+    {
+      menuId: 1,
+      productId: 2
+    },
+    {
+      menuId: 3,
+      productId: 4
     }
   ]
 }
