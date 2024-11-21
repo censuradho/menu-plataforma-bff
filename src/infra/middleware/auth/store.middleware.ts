@@ -16,7 +16,7 @@ export async function storeMiddleware (req: Request<any, any, JWTPayload>, res: 
     const payload = Jwt.verifyAccessToken(token) as JWTPayload
   
     if (!payload.storeId) return res
-      .status(401)
+      .status(404)
       .json({
         message: ERRORS.STORE.NOT_FOUND
       })
