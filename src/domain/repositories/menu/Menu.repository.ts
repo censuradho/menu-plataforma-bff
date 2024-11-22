@@ -79,7 +79,7 @@ export class MenuRepository implements IMenuRepository {
         products: true
       },
       orderBy: {
-        createdAt: 'desc'
+        updatedAt: 'desc'
       }
     })
   }
@@ -93,7 +93,7 @@ export class MenuRepository implements IMenuRepository {
       include: {
         products: {
           orderBy: {
-            createdAt: 'desc'
+            updatedAt: 'desc'
           }
         }
       },
@@ -114,7 +114,7 @@ export class MenuRepository implements IMenuRepository {
         products: {
           where: {
             id: productId
-          }
+          },
         }
       }
     })

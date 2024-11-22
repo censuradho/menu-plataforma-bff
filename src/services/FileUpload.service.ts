@@ -1,6 +1,6 @@
 import { HttpException } from '@/domain/models/HttpException'
 import multer, { Multer } from 'multer'
-import path from 'path'
+import path, { join } from 'path'
 import fs from 'fs'
 import { promisify } from 'util'
 
@@ -35,7 +35,6 @@ export class FileUploadService {
       }
     })
   }
-
   
   singleUpload(fieldName: string) {
     return this.upload.single(fieldName);
@@ -46,10 +45,11 @@ export class FileUploadService {
   }
 
   async removeFile (path: string) {
-    if (!fs.existsSync(path)) return
+    const fullPath =join( __dirname, '..', 'shared', 'tmp', path)
+    if (!fs.existsSync(fullPath)) return
     
     const unlinkAsync =  promisify(fs.unlink)
 
-    await unlinkAsync(path)
+    await unlinkAsync(fullPath)
   }
 }
