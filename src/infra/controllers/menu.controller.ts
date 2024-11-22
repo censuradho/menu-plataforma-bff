@@ -1,3 +1,4 @@
+import { FindManyMenuQueryDTO } from '@/domain/dto/menu.dto';
 import { HttpException } from '@/domain/models/HttpException';
 import { JWTPayload } from '@/domain/models/JWTPayload';
 import { MenuRepository } from '@/domain/repositories/menu/Menu.repository';
@@ -48,7 +49,12 @@ export class MenuController {
     try {
       const user = req.user as JWTPayload
 
-      const data = await this.menuRepository.findManyPaginated(user.storeId!!, req.query)
+      const { page, size } = req.query as FindManyMenuQueryDTO
+
+      const data = await this.menuRepository.findManyPaginated(user.storeId!!, {
+        page: Number(page),
+        size: Number(size),
+      })
 
       return res.status(201).json(data)
 

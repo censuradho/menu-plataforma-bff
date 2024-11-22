@@ -88,11 +88,14 @@ export class MenuRepository implements IMenuRepository {
 
   async findManyPaginated (storeId: number, query: FindManyMenuQueryDTO) {
     const {
-      page = 1,
-      size = 10
+      page,
+      size
     } = query
 
-    const skip = (page - 1) * size
+    const _page = page || 1
+    const _size = size || 1
+
+    const skip = (_page - 1) * _size
 
     const totalRecords = await this.prisma.menu.count({
       where: {
@@ -100,8 +103,8 @@ export class MenuRepository implements IMenuRepository {
       },
     });
 
-    const totalPages = Math.ceil(totalRecords / size); 
-    const currentPage = Math.max(1, Math.min(page, totalPages));
+    const totalPages = Math.ceil(totalRecords / _size); 
+    const currentPage = Math.max(1, Math.min(_page, totalPages));
 
     const data = await this.prisma.menu.findMany({
       where: {
@@ -124,7 +127,7 @@ export class MenuRepository implements IMenuRepository {
         currentPage,
         hasNextPage: currentPage < totalPages,
         hasPreviousPage: currentPage > 1,
-        size
+        size: _size
       },
       data,
     )
