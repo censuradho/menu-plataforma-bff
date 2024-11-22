@@ -92,16 +92,16 @@ export class MenuRepository implements IMenuRepository {
       size
     } = query
 
-    const _page = page || 1
-    const _size = size || 1
-
-    const skip = (_page - 1) * _size
-
     const totalRecords = await this.prisma.menu.count({
       where: {
         storeId
       },
     });
+
+    const _page = page || 1
+    const _size = size || 10
+
+    const skip = (_page - 1) * _size
 
     const totalPages = Math.ceil(totalRecords / _size); 
     const currentPage = Math.max(1, Math.min(_page, totalPages));
@@ -116,7 +116,7 @@ export class MenuRepository implements IMenuRepository {
       orderBy: {
         updatedAt: 'desc'
       },
-      take: size,
+      take: _size,
       skip
     })
 

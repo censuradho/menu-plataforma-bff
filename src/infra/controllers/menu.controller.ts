@@ -33,7 +33,7 @@ export class MenuController {
 
       const data = await this.menuRepository.findMany(user.storeId!!)
 
-      return res.status(201).json(data)
+      return res.status(200).json(data)
 
     } catch (error) {
       req.log.error(error)
@@ -56,7 +56,7 @@ export class MenuController {
         size: Number(size),
       })
 
-      return res.status(201).json(data)
+      return res.status(200).json(data)
 
     } catch (error) {
       req.log.error(error)
