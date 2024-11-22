@@ -30,6 +30,14 @@ menuRoutes.get(
 )
 
 menuRoutes.get(
+  '/menu/p', 
+  storeUserJwtMiddleware,
+  storeMiddleware,
+  controller.findManyPaginated.bind(controller)
+)
+
+
+menuRoutes.get(
   '/menu/:menuId/product/:id', 
   storeUserJwtMiddleware,
   storeMiddleware,

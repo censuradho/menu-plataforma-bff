@@ -1,8 +1,10 @@
+import { FindManyMenuQueryDTO } from './../../dto/menu.dto';
 import { PrismaClient } from "@prisma/client";
 import { IMenuRepository } from "./IMenu.repository";
 import { CreateMenuDTO } from "@/domain/dto/menu.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
+import { Paginate } from '@/domain/models/Paginate.model';
 
 export class MenuRepository implements IMenuRepository {
   constructor (
@@ -82,6 +84,50 @@ export class MenuRepository implements IMenuRepository {
         updatedAt: 'desc'
       }
     })
+  }
+
+  async findManyPaginated (storeId: number, query: FindManyMenuQueryDTO) {
+    const {
+      page = 1,
+      size = 10
+    } = query
+
+    const skip = (page - 1) * size
+
+    const totalRecords = await this.prisma.menu.count({
+      where: {
+        storeId
+      },
+    });
+
+    const totalPages = Math.ceil(totalRecords / size); 
+    const currentPage = Math.max(1, Math.min(page, totalPages));
+
+    const data = await this.prisma.menu.findMany({
+      where: {
+        storeId
+      },
+      include: {
+        products: true
+      },
+      orderBy: {
+        updatedAt: 'desc'
+      },
+      take: size,
+      skip
+    })
+
+    return new Paginate(
+      {
+        totalRecords,
+        totalPages,
+        currentPage,
+        hasNextPage: currentPage < totalPages,
+        hasPreviousPage: currentPage > 1,
+        size
+      },
+      data,
+    )
   }
 
   async findById(storeId: number, menuId: number) {

@@ -1,5 +1,5 @@
-import { IsArray, IsBoolean, IsOptional, IsString, ValidateNested } from "class-validator";
-import { Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { Transform, Type } from 'class-transformer';
 import { CreateProductDTO } from "./product.dto";
 
 export class CreateMenuDTO {
@@ -23,4 +23,17 @@ export class CreateMenuDTO {
   @ValidateNested({ each: true })
   @Type(() => CreateProductDTO)
   products: CreateProductDTO[]
+}
+
+
+export class FindManyMenuQueryDTO {
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  page?: number
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  size?: number
 }

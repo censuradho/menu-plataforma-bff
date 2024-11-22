@@ -44,6 +44,25 @@ export class MenuController {
     }
   }
 
+  async findManyPaginated (req: Request, res: Response) {
+    try {
+      const user = req.user as JWTPayload
+
+      const data = await this.menuRepository.findManyPaginated(user.storeId!!, req.query)
+
+      return res.status(201).json(data)
+
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
+
+
   async findById (req: Request, res: Response) {
     try {
       const user = req.user as JWTPayload
