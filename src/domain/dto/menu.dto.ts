@@ -36,4 +36,8 @@ export class FindManyMenuQueryDTO {
   @IsNumber()
   @Transform(({ value }) => Number(value))
   size?: number
+
+  @IsOptional()
+  @IsString()
+  label?: string
 }

@@ -49,11 +49,12 @@ export class MenuController {
     try {
       const user = req.user as JWTPayload
 
-      const { page, size } = req.query as FindManyMenuQueryDTO
+      const { page, size, label } = req.query as FindManyMenuQueryDTO
 
       const data = await this.menuRepository.findManyPaginated(user.storeId!!, {
         page: Number(page),
         size: Number(size),
+        label
       })
 
       return res.status(200).json(data)
