@@ -95,7 +95,12 @@ export class MenuRepository implements IMenuRepository {
 
     const totalRecords = await this.prisma.menu.count({
       where: {
-        storeId
+        storeId,
+        ...(label && ({
+          label: {
+            contains: label
+          }
+        }))
       },
     });
 
