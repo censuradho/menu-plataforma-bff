@@ -1,10 +1,11 @@
-import { FindManyMenuQueryDTO } from './../../dto/menu.dto';
-import { PrismaClient } from "@prisma/client";
-import { IMenuRepository } from "./IMenu.repository";
 import { CreateMenuDTO } from "@/domain/dto/menu.dto";
 import { HttpException } from "@/domain/models/HttpException";
-import { ERRORS } from "@/shared/errors";
 import { Paginate } from '@/domain/models/Paginate.model';
+import { ERRORS } from "@/shared/errors";
+import { PrismaClient } from "@prisma/client";
+import { FindManyMenuQueryDTO } from './../../dto/menu.dto';
+import { IMenuRepository } from "./IMenu.repository";
+import { MenuListPaginateModel } from "@/domain/models/MenuListPaginateModel";
 
 export class MenuRepository implements IMenuRepository {
   constructor (
@@ -114,6 +115,7 @@ export class MenuRepository implements IMenuRepository {
     const totalPages = Math.ceil(totalRecords / _size); 
     const currentPage = Math.max(1, Math.min(_page, totalPages));
 
+
     const data = await this.prisma.menu.findMany({
       where: {
         storeId,
@@ -124,7 +126,11 @@ export class MenuRepository implements IMenuRepository {
         }))
       },
       include: {
-        products: true
+        _count: {
+          select: {
+            products: true
+          }
+        }
       },
       orderBy: {
         updatedAt: 'desc'
