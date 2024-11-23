@@ -46,6 +46,8 @@ export class StoreRepository {
         revenueEstimate: payload.revenueEstimate,
         numberOfEmployees: payload.numberOfEmployees,
         ownerId,
+        hourFrom: payload?.hourFrom,
+        hourTo: payload?.hourTo
       }
     })
   }

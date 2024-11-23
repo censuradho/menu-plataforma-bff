@@ -13,12 +13,6 @@ export class CreateMenuDTO {
   @IsBoolean()
   visible?: boolean
 
-  @IsString()
-  hourFrom: string
-
-  @IsString()
-  hourTo: string
-
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateProductDTO)

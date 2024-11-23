@@ -1,4 +1,4 @@
-import { IsInt, IsNumber, IsPositive, IsString } from "class-validator";
+import { IsInt, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class CreateStoreDTO {
   @IsString()
@@ -23,4 +23,13 @@ export class CreateStoreDTO {
   @IsInt()
   @IsPositive()
   numberOfEmployees: number
+
+  
+  @IsOptional()
+  @IsString()
+  hourFrom?: string
+  
+  @IsOptional()
+  @IsString()
+  hourTo?: string
 }

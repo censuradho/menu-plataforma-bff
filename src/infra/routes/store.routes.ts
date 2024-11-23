@@ -6,6 +6,7 @@ import { storeUserJwtMiddleware } from '@/infra/middleware/auth/storeUserJWT.mid
 import { StoreRepository } from '@/domain/repositories/store/store.repository';
 
 import { prisma } from '@/services/PrismaClient';
+import { createStoreValidation } from '@/infra/middleware/store.middleware';
 
 const storeRoutes = Router()
 
@@ -15,6 +16,7 @@ const controller = new StoreController(repository)
 storeRoutes.post(
   '/store', 
   storeUserJwtMiddleware,
+  createStoreValidation,
   controller.create.bind(controller)
 )
 

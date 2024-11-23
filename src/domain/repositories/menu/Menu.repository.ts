@@ -23,8 +23,6 @@ export class MenuRepository implements IMenuRepository {
         id: payload?.id || 0
       },
       update: {
-        hourFrom: payload.hourFrom,
-        hourTo: payload.hourTo,
         label: payload.label,
         visible: payload.visible,
         updatedAt: new Date(),
@@ -52,8 +50,6 @@ export class MenuRepository implements IMenuRepository {
         },
       },
       create: {
-        hourFrom: payload.hourFrom,
-        hourTo: payload.hourTo,
         label: payload.label,
         visible: payload.visible,
         storeId,

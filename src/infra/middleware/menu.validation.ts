@@ -14,8 +14,6 @@ export async function createMenuValidation (req: Request, res: Response, next: N
     const validation = new CreateMenuDTO()
   
     validation.id = payload.id
-    validation.hourFrom = payload.hourFrom
-    validation.hourTo = payload.hourTo
     validation.label = payload.label
     validation.products = payload.products
     validation.visible = payload.visible
