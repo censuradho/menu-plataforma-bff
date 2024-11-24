@@ -39,6 +39,14 @@ storeRoutes.put(
   controller.logoUpload.bind(controller)
 )
 
+storeRoutes.put(
+  '/store', 
+  storeUserJwtMiddleware,
+  storeMiddleware,
+  createStoreValidation,
+  controller.update.bind(controller)
+)
+
 export {
   storeRoutes
 }

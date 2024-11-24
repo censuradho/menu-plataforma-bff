@@ -46,6 +46,25 @@ export class StoreController {
     }
   }
 
+  async update (req: Request, res: Response) {
+    const user = req.user as JWTPayload
+
+    try {
+      await this.storeRepository.update(
+        user.storeId!!,
+        user.id,
+        req.body
+      )
+
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
   async logoUpload (req: Request, res: Response) {
     try {
       if (!req.file) return res
