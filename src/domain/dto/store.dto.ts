@@ -29,4 +29,21 @@ export class CreateStoreDTO {
   @IsOptional()
   @IsString()
   hourTo?: string
+
+
+  @IsOptional()
+  @IsString()
+  instagramUrl?: string
+
+  @IsOptional()
+  @IsString()
+  facebookUrl?: string
+
+  @IsOptional()
+  @IsString()
+  twitterUrl?: string
+
+  @IsOptional()
+  @IsString()
+  tikTokUrl?: string
 }

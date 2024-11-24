@@ -49,7 +49,11 @@ export class StoreRepository {
         numberOfEmployees: payload.numberOfEmployees,
         ownerId,
         hourFrom: payload?.hourFrom,
-        hourTo: payload?.hourTo
+        hourTo: payload?.hourTo,
+        facebook: payload?.facebookUrl,
+        instagramUrl: payload?.instagramUrl,
+        tikTokUrl: payload?.tikTokUrl,
+        twitterUrl: payload?.twitterUrl,
       }
     })
   }
