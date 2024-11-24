@@ -4,16 +4,19 @@ import { StoreRepository } from "./store.repository";
 import { createStoreDTOMock, storeEntityMock } from "@/__mock__/store";
 import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
+import { FileUploadService } from "@/services/FileUpload.service";
 
 describe('StoreRepository', () => {
   let mock: MockContext
   let ctx: Context
   let repository: StoreRepository
+  let fileUploadService: FileUploadService
 
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
-    repository = new StoreRepository(ctx.prisma)
+    fileUploadService = new FileUploadService()
+    repository = new StoreRepository(ctx.prisma, fileUploadService)
   })
 
   describe('.create', () => {

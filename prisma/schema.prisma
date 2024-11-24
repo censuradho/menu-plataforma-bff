@@ -70,7 +70,7 @@ model Store {
 
   revenueEstimate String
 
-  numberOfEmployees Int @default(0)
+  numberOfEmployees String
 
   ownerId String @unique
   owner StoreUser @relation(fields: [ownerId], references: [id])

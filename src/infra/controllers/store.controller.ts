@@ -56,6 +56,8 @@ export class StoreController {
         req.body
       )
 
+      return res.sendStatus(200)
+
     } catch (error) {
       req.log.error(error)
       if (error instanceof HttpException) {

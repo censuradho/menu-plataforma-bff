@@ -13,10 +13,12 @@ import {
 import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.controller";
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
 import { StoreRepository } from "@/domain/repositories/store/store.repository";
+import { FileUploadService } from "@/services/FileUpload.service";
 
 const authStoreUserRoute = Router()
 
-const storeRepository = new StoreRepository(prisma)
+const fileUploadService = new FileUploadService()
+const storeRepository = new StoreRepository(prisma, fileUploadService)
 const storeUserRepository = new StoreUserRepository(prisma)
 const repository = new AuthStoreUserRepository(storeUserRepository, storeRepository)
 const controller = new AuthStoreUserController(repository)

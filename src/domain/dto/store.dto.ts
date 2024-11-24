@@ -19,11 +19,8 @@ export class CreateStoreDTO {
   @IsString()
   revenueEstimate: string
 
-  @IsNumber()
-  @IsInt()
-  @IsPositive()
-  numberOfEmployees: number
-
+  @IsString()
+  numberOfEmployees: string
   
   @IsOptional()
   @IsString()
