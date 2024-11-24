@@ -59,6 +59,8 @@ model Store {
   hourTo String?
   is24h Boolean @default(false)
 
+  logo String?
+
   document String
   documentType String
 

@@ -121,8 +121,6 @@ export class ProductRepository {
       }
     })
 
-    console.log(product?.image)
-
     if (product?.image) {
       await this.fileUploadService.removeFile(product.image)
     }

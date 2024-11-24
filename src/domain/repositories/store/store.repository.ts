@@ -1,11 +1,13 @@
 import { CreateStoreDTO } from "@/domain/dto/store.dto";
 import { HttpException } from "@/domain/models/HttpException";
+import { FileUploadService } from "@/services/FileUpload.service";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
 
 export class StoreRepository {
   constructor (
-    private prisma: PrismaClient
+    private prisma: PrismaClient,
+    private fileUploadService: FileUploadService
   ) {}
 
   async findStoreByOwnerId (id: string) {
@@ -72,5 +74,33 @@ export class StoreRepository {
         id: storeId,
       },
     })
+  }
+
+  async logoUpload (
+    id: number,
+    file: Express.Multer.File
+  ) {
+
+    const store = await this.prisma.store.findFirst({
+      where: {
+        id
+      }
+    })
+
+    if (!store) throw new HttpException(404, ERRORS.STORE.NOT_FOUND)
+
+    if (store?.logo) {
+      await this.fileUploadService.removeFile(store.logo)
+    }
+
+    await this.prisma.store.update({
+      where: {
+        id
+      },
+      data: {
+        logo: file.filename
+      }
+    })
+
   }
 }

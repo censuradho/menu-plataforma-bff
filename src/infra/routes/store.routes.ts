@@ -7,10 +7,15 @@ import { StoreRepository } from '@/domain/repositories/store/store.repository';
 
 import { prisma } from '@/services/PrismaClient';
 import { createStoreValidation } from '@/infra/middleware/store.middleware';
+import { FileUploadService } from '@/services/FileUpload.service';
+import { storeMiddleware } from '../middleware/auth/store.middleware';
+import { uploadSingleFileMiddleware } from '../middleware/fileUpload.middleware';
 
 const storeRoutes = Router()
 
-const repository = new StoreRepository(prisma)
+const fileUploadService = new FileUploadService()
+
+const repository = new StoreRepository(prisma, fileUploadService)
 const controller = new StoreController(repository)
 
 storeRoutes.post(
@@ -24,6 +29,14 @@ storeRoutes.get(
   '/store', 
   storeUserJwtMiddleware,
   controller.findByOwnerId.bind(controller)
+)
+
+storeRoutes.put(
+  '/store/logo', 
+  storeUserJwtMiddleware,
+  storeMiddleware,
+  uploadSingleFileMiddleware,
+  controller.logoUpload.bind(controller)
 )
 
 export {

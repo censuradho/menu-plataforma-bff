@@ -1,6 +1,7 @@
 import { HttpException } from '@/domain/models/HttpException';
 import { JWTPayload } from '@/domain/models/JWTPayload';
 import { StoreRepository } from '@/domain/repositories/store/store.repository';
+import { ERRORS } from '@/shared/errors';
 import { Request, Response } from 'express';
 
 export class StoreController {
@@ -37,6 +38,31 @@ export class StoreController {
     } catch (error) {
       req.log.error(error)
 
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
+
+  async logoUpload (req: Request, res: Response) {
+    try {
+      if (!req.file) return res
+      .status(400)
+      .json({
+        message: ERRORS.FILE_UPLOAD.REQUIRED
+      })
+
+      const user = req.user as JWTPayload
+
+      await this.storeRepository.logoUpload(
+        user.storeId!!,
+        req.file
+      )
+      return res.sendStatus(204)
+    } catch (error) {
+      req.log.error(error)
       if (error instanceof HttpException) {
         return res.status(error.status).json({ message: error.message })
       }
