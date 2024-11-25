@@ -48,9 +48,16 @@ storeRoutes.put(
 )
 
 storeRoutes.get(
-  '/store/:id', 
+  '/store/public', 
+  controller.findMany.bind(controller)
+)
+
+storeRoutes.get(
+  '/store/public/:id', 
   controller.findStoreWithMenu.bind(controller)
 )
+
+
 
 export {
   storeRoutes

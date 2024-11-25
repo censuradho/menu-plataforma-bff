@@ -108,27 +108,37 @@ export class StoreRepository {
 
   }
 
-  async findStoreWithMenu (storeId: number) {
+  async findMany () {
+    return await this.prisma.store.findMany({
+      select: {
+        id: true
+      },
+    })
+  }
+  async findStoreWithMenu (storeId: string) {
     const store = await this.prisma.store.findFirst({
       where: {
-        id: storeId
+        id: Number(storeId)
       },
-      include: {
+      select: {
+        hourFrom: true,
+        hourTo: true,
+        logo: true,
+        instagramUrl: true,
+        facebook: true,
+        name: true,
+        tikTokUrl: true,
+        twitterUrl: true,
         menus: {
           include: {
             products: true
           }
         }
-      }
+      },
     })
 
     if (!store) throw new HttpException(404, ERRORS.STORE.NOT_FOUND)
 
-    return {
-      ...store,
-      ownerId: undefined,
-      createdAt: undefined,
-      updatedAt: undefined,
-    }
+    return store
   }
 }
