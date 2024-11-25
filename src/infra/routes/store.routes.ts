@@ -47,6 +47,11 @@ storeRoutes.put(
   controller.update.bind(controller)
 )
 
+storeRoutes.get(
+  '/store/:id', 
+  controller.findStoreWithMenu.bind(controller)
+)
+
 export {
   storeRoutes
 }

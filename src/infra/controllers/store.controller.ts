@@ -91,4 +91,22 @@ export class StoreController {
       return res.sendStatus(500)   
     }
   }
+
+  async findStoreWithMenu (req: Request, res: Response) {
+    try {
+      const { id } = req.params
+
+      const store = await this.storeRepository.findStoreWithMenu(Number(id))
+
+      return res.json(store)
+
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
 }
