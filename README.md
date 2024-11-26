@@ -1,692 +1,299 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" align="center" width="30%">
-</p>
-<p align="center"><h1 align="center">MENU-BFF</h1></p>
-<p align="center">
-	<em><code>❯ MENU-BFF</code></em>
-</p>
-<p align="center">
-	<img src="https://img.shields.io/github/license/censuradho/mui-bff?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
-	<img src="https://img.shields.io/github/last-commit/censuradho/mui-bff?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
-	<img src="https://img.shields.io/github/languages/top/censuradho/mui-bff?style=default&color=0080ff" alt="repo-top-language">
-	<img src="https://img.shields.io/github/languages/count/censuradho/mui-bff?style=default&color=0080ff" alt="repo-language-count">
-</p>
-<p align="center"><!-- default option, no dependency badges. -->
-</p>
-<p align="center">
-	<!-- default option, no dependency badges. -->
-</p>
-<br>
+# Trabalho final
+
+Este trabalho consiste no desenvolvimento de APIs RESTful (Web Services RESTful) com persistência da nossa aplicação Web. O objetivo deste trabalho é permitir os alunos aplicarem os conceitos e funcionalidades do REST e dos padrões de persistência vistos em aula. Nesse trabalho, a ideia é realizar o back-end do trabalho.
+
+## Instruções gerais
+
+O trabalho possui um tema livre com algumas restrições quanto às funcionalidades, ou seja, o(s) aluno(s) poderá(ão) trabalhar com um domínio de aplicação de seu interesse. Com base nessa especificação, o(s) aluno(s) (individual ou dupla) deverá(ão) desenvolver o back-end da aplicação. Para isso, todas as APIs devem ser implementados e testados - utilizando a ferramenta Postman (vista em aula). As APIs deverão contemplar pelo menos dois CRUD de entidades e uma funcionalidade específica, e essas funcionalidades deverão persistir seus dados em um banco de dados. Caso o aluno não tenha ideia de trabalho, o aluno deverá realizar a aplicação biblioteca descrito no anexo do Escopo do Trabalho (abaixo). A aplicação desenvolvida deverá contemplar alguns assuntos vistos em aula. Assim, a avaliação será baseada de acordo com as funcionalidades a serem desenvolvidas e com os conceitos de REST (vistos em aula) empregados para o desenvolvimento dessa aplicação.
 
 
-## 🔗 Table of Contents
+## Avaliação
 
-- [📍 Overview](#-overview)
-- [👾 Features](#-features)
-- [📁 Project Structure](#-project-structure)
-  - [📂 Project Index](#-project-index)
-- [🚀 Getting Started](#-getting-started)
-  - [☑️ Prerequisites](#-prerequisites)
-  - [⚙️ Installation](#-installation)
-  - [🤖 Usage](#🤖-usage)
-  - [🧪 Testing](#🧪-testing)
-- [📌 Project Roadmap](#-project-roadmap)
-- [🔰 Contributing](#-contributing)
-- [🎗 License](#-license)
-- [🙌 Acknowledgments](#-acknowledgments)
+O conceito desse trabalho será baseado de acordo com as funcionalidades realizadas no trabalho e com os conceitos de REST e persistência empregados no trabalho. Abaixo segue a relação de conceitos e features a serem realizadas no trabalho: Conceito C:
 
----
+Apresentação de forma clara (para o professor);
+Duas APIs RESTful realizando CRUD funcionando de forma correta com persistência (um para cada aluno);
+Testes das APIs corretamente. Conceito B:
+Realizar as tarefas para alcançar o conceito C;
+Realizar uma funcionalidade de negócio (ou CRUD) que manipule duas entidades simultaneamente na aplicação como um todo (utilizando APIs de forma correta e adequada) - no caso do retorno do buscarPorId, retornar os dois objetos relacionados e nos outros casos, verificar corretamente as restrições de FK;
+Utilização de um sistema de controle de versão (ex: git) e de um ambiente de colaboração e gerenciamento de código baseado nesse controle de versão (ex: GitHub, Bitbucket). Caso o trabalho seja em grupo, a colaboração deve estar evidenciada;
+Testes unitários aplicados utilizando Jest (pelo menos uma entidade para cada aluno - trabalhando com cenários de sucesso e pelo menos um de exceção - quando tiver).
+Modelagem apropriada das APIs (retorno dos status code correto) e do código (visto em aula); Conceito A:
+Aplicação completa, realizando todas as funcionalidades do conceito B com regras de negócio aplicadas corretamente;
+Tratamento de erros, regras de negócio e exceções;
+Testes de APIs utilizando Jest e Supertest;
+Utilizar autenticação aplicando técnicas de segurança adequadamente (OAuth e JWT); ou uma das seguintes funcionalidades não vistas em aula: Implantar os Web Services em um servidor na nuvem: Heroku, Digital Ocean, etc; Swagger;
 
-## 📍 Overview
 
-<code>❯ REPLACE-ME</code>
+## Tema
 
----
+Sistema de cardápio online
 
-## 👾 Features
+- Gerenciamento de empresa
+- Gerenciamento de grupo de cardápios
+- Gerenciamento de cardápio
+- Gerenciamento de produtos
+- upload de arquivo
+- Autenticação via email/senha com token JWT serverOnly
 
-<code>❯ REPLACE-ME</code>
+## Getting started
 
----
+### Requisitos
 
-## 📁 Project Structure
+ - [Node.js](https://nodejs.org/en)
 
-```sh
-└── mui-bff/
-    ├── README.md
-    ├── eslint.config.mjs
-    ├── index.js
-    ├── package.json
-    ├── pnpm-lock.yaml
-    ├── prisma
-    │   ├── migrations
-    │   └── schema.prisma
-    ├── src
-    │   ├── @types
-    │   ├── __mock__
-    │   ├── __test__
-    │   ├── domain
-    │   ├── infra
-    │   ├── main.ts
-    │   ├── services
-    │   └── shared
-    ├── tsconfig.json
-    └── vitest.config.mts
+
+### Instalar ambiente
+
+1. Após instalar os requisitos a cima, Na raiz do projeto, rode o comando 
+
+```bash
+$ npm i
+```
+
+2. Copiar o arquivo `.env.exemple` na raiz do projeto, renomeando-o para `.env`
+
+3. Gerando o banco de dados local
+
+```bash
+npm run generate
+```
+
+4. Rode o ambiente de desenvolvimento
+
+```bash
+$ npm run dev
+```
+
+5. Agora, se acessar o path `http://localhost:3333`, devera aparecer a seguinte mensagem:
+
+```json
+{ "ok": "server is on" }
 ```
 
 
-### 📂 Project Index
-<details open>
-	<summary><b><code>MUI-BFF/</code></b></summary>
-	<details> <!-- __root__ Submodule -->
-		<summary><b>__root__</b></summary>
-		<blockquote>
-			<table>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/pnpm-lock.yaml'>pnpm-lock.yaml</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/tsconfig.json'>tsconfig.json</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/eslint.config.mjs'>eslint.config.mjs</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/index.js'>index.js</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/vitest.config.mts'>vitest.config.mts</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/package.json'>package.json</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			</table>
-		</blockquote>
-	</details>
-	<details> <!-- src Submodule -->
-		<summary><b>src</b></summary>
-		<blockquote>
-			<table>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/main.ts'>main.ts</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			</table>
-			<details>
-				<summary><b>shared</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/shared/jwt.ts'>jwt.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/shared/errors.ts'>errors.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/shared/environment.ts'>environment.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/shared/signOut.ts'>signOut.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					</table>
-					<details>
-						<summary><b>lib</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/shared/lib/logger.ts'>logger.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>config</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/shared/config/cors.ts'>cors.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/shared/config/jwt.config.ts'>jwt.config.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>__test__</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/__test__/setup.ts'>setup.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>infra</b></summary>
-				<blockquote>
-					<details>
-						<summary><b>controllers</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/controllers/product.controller.ts'>product.controller.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/controllers/menu.controller.ts'>menu.controller.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/controllers/store.controller.ts'>store.controller.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-							<details>
-								<summary><b>auth</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/controllers/auth/authStoreUser.controller.ts'>authStoreUser.controller.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>routes</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/routes/routes.ts'>routes.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/routes/product.routes.ts'>product.routes.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/routes/menu.route.ts'>menu.route.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/routes/store.routes.ts'>store.routes.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-							<details>
-								<summary><b>auth</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/routes/auth/authStoreUser.route.ts'>authStoreUser.route.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/routes/auth/auth.routes.ts'>auth.routes.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>middleware</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/middleware/fileUpload.middleware.ts'>fileUpload.middleware.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/middleware/store.middleware.ts'>store.middleware.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/middleware/menu.validation.ts'>menu.validation.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/middleware/product.validation.ts'>product.validation.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-							<details>
-								<summary><b>auth</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/middleware/auth/store.middleware.ts'>store.middleware.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/middleware/auth/authStoreUser.validation.ts'>authStoreUser.validation.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/infra/middleware/auth/storeUserJWT.middleware.ts'>storeUserJWT.middleware.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-						</blockquote>
-					</details>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>@types</b></summary>
-				<blockquote>
-					<details>
-						<summary><b>express</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/@types/express/index.d.ts'>index.d.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>services</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/services/PrismaClient.ts'>PrismaClient.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/services/FileUpload.service.ts'>FileUpload.service.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>domain</b></summary>
-				<blockquote>
-					<details>
-						<summary><b>entity</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/entity/Store.entity.ts'>Store.entity.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/entity/Menu.entity.ts'>Menu.entity.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/entity/StoreUser.entity.ts'>StoreUser.entity.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>models</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/models/HttpException.ts'>HttpException.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/models/MenuListPaginateModel.ts'>MenuListPaginateModel.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/models/Paginate.model.ts'>Paginate.model.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/models/JWTPayload.ts'>JWTPayload.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/models/StoreUserModel.ts'>StoreUserModel.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>dto</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/dto/menu.dto.ts'>menu.dto.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/dto/store.dto.ts'>store.dto.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/dto/authStoreuser.dto.ts'>authStoreuser.dto.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/dto/StoreUser.dto.ts'>StoreUser.dto.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/dto/product.dto.ts'>product.dto.ts</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>repositories</b></summary>
-						<blockquote>
-							<details>
-								<summary><b>storeUser</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/storeUser/IStoreUser.repository.ts'>IStoreUser.repository.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/storeUser/User.repository.ts'>User.repository.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/storeUser/StoreUser.repository.spec.ts'>StoreUser.repository.spec.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>store</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/store/store.repository.ts'>store.repository.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/store/store.repository.spec.ts'>store.repository.spec.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>auth</b></summary>
-								<blockquote>
-									<details>
-										<summary><b>storeuser</b></summary>
-										<blockquote>
-											<table>
-											<tr>
-												<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/auth/storeuser/AuthStoreUser.repository.ts'>AuthStoreUser.repository.ts</a></b></td>
-												<td><code>❯ REPLACE-ME</code></td>
-											</tr>
-											<tr>
-												<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/auth/storeuser/AuthStoreUser.repository.spec.ts'>AuthStoreUser.repository.spec.ts</a></b></td>
-												<td><code>❯ REPLACE-ME</code></td>
-											</tr>
-											<tr>
-												<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/auth/storeuser/IAuthStoreUser.repository.ts'>IAuthStoreUser.repository.ts</a></b></td>
-												<td><code>❯ REPLACE-ME</code></td>
-											</tr>
-											</table>
-										</blockquote>
-									</details>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>product</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/product/Product.repository.ts'>Product.repository.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/product/IProduct.repository.ts'>IProduct.repository.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/product/Product.repository.spec.ts'>Product.repository.spec.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>menu</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/menu/IMenu.repository.ts'>IMenu.repository.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/domain/repositories/menu/Menu.repository.ts'>Menu.repository.ts</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-						</blockquote>
-					</details>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>__mock__</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/__mock__/menu.ts'>menu.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/__mock__/file.ts'>file.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/__mock__/store.ts'>store.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/src/__mock__/storeUser.ts'>storeUser.ts</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-		</blockquote>
-	</details>
-	<details> <!-- prisma Submodule -->
-		<summary><b>prisma</b></summary>
-		<blockquote>
-			<table>
-			<tr>
-				<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/prisma/schema.prisma'>schema.prisma</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			</table>
-			<details>
-				<summary><b>migrations</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/prisma/migrations/migration_lock.toml'>migration_lock.toml</a></b></td>
-						<td><code>❯ REPLACE-ME</code></td>
-					</tr>
-					</table>
-					<details>
-						<summary><b>20241124213447_</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/prisma/migrations/20241124213447_/migration.sql'>migration.sql</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>20241124144011_</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/censuradho/mui-bff/blob/master/prisma/migrations/20241124144011_/migration.sql'>migration.sql</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-				</blockquote>
-			</details>
-		</blockquote>
-	</details>
-</details>
+## Scripts
 
----
-## 🚀 Getting Started
+1. **npm run dev**: Roda o ambiente de desenvolvimento;
+2. **npm run migrate:dev**: Gera novas migrations caso o schema tenha sido alterado;
+3. **npm run generate**: Gera as migrations a partir dos arquivos pre-existentes;
+4. **npm run studio**: Roda uma aplicação que exibe os dados do banco de dados;
+5. **npm run build**: Gera o build da aplicação;
+6. **npm run start**: Roda o arquivo buildado;
+7. **npm run test**: Roda as suítes de teste;
 
-### ☑️ Prerequisites
+## END Points 
 
-Before getting started with mui-bff, ensure your runtime environment meets the following requirements:
+###  Autenticação
 
-- **Programming Language:** TypeScript
-- **Package Manager:** Npm
+**Cadastro**
 
+Endpoint `POST /auth/store-user/register`
 
-### ⚙️ Installation
+Request body
 
-Install mui-bff using one of the following methods:
-
-**Build from source:**
-
-1. Clone the mui-bff repository:
-```sh
-❯ git clone https://github.com/censuradho/mui-bff
+```json
+{
+  "email": "teste@teste.com",
+	"firstName": "firstName",
+	"lastName": "lastName",
+	"password": "1234567890",
+	"phone": "+5551982307645"
+}
 ```
 
-2. Navigate to the project directory:
-```sh
-❯ cd mui-bff
-```
+**Validação de e-mail**
 
-3. Install the project dependencies:
+Endpoint `POST /auth/store-user/email-validation`
 
+Request body
 
-**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
-
-```sh
-❯ npm install
+```json
+{
+  "email": "teste@teste.com"
+}
 ```
 
 
+**Login**
 
+Endpoint `POST /auth/store-user/login`
 
-### 🤖 Usage
-Run mui-bff using the following command:
-**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+Request body
 
-```sh
-❯ npm start
+```json
+{
+	"email": "teste@teste.com",
+	"password": "1234567890"
+}
+```
+
+**Me**: Informações sobre o usuário
+
+Endpoint `GET /auth/store-user/me`
+
+Request body
+
+```json
+{
+	"id": "13434ab5-cdf9-4ea6-9119-bced84a5340a",
+	"firstName": "firstName",
+	"email": "teste@teste.com",
+	"lastName": "lastName"
+}
 ```
 
 
-### 🧪 Testing
-Run the test suite using the following command:
-**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+**Logout**
 
-```sh
-❯ npm test
+Endpoint `GET /auth/store-user/logout`
+
+###  Store
+
+**Create**
+
+Endpoint `POST /store`
+
+Request body
+
+```json
+{
+	"cuisineType": "cuisineType",
+  "document": "document",
+  "documentType": "documentType",
+  "establishmentTime": "establishmentTime",
+  "name": "name",
+  "revenueEstimate": "revenueEstimate",
+  "numberOfEmployees": 10
+}
 ```
 
+**FindByOwnerId**: Encontra uma loja pelo id do criador
 
----
-## 📌 Project Roadmap
+Endpoint `GET /store`
 
-- [X] **`Task 1`**: <strike>Implement feature one.</strike>
-- [ ] **`Task 2`**: Implement feature two.
-- [ ] **`Task 3`**: Implement feature three.
+Response body
 
----
+```json
+{
+	"id": 1,
+	"name": "name",
+	"document": "document",
+	"documentType": "documentType",
+	"cuisineType": "cuisineType",
+	"establishmentTime": "establishmentTime",
+	"revenueEstimate": "revenueEstimate",
+	"numberOfEmployees": 10,
+	"ownerId": "13434ab5-cdf9-4ea6-9119-bced84a5340a",
+	"createdAt": "2024-11-15T00:16:06.127Z",
+	"updatedAt": "2024-11-15T00:16:06.127Z"
+}
+```
 
-## 🔰 Contributing
+###  MenuGroup
 
-- **💬 [Join the Discussions](https://github.com/censuradho/mui-bff/discussions)**: Share your insights, provide feedback, or ask questions.
-- **🐛 [Report Issues](https://github.com/censuradho/mui-bff/issues)**: Submit bugs found or log feature requests for the `mui-bff` project.
-- **💡 [Submit Pull Requests](https://github.com/censuradho/mui-bff/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
+Agrupador de cardápios
 
-<details closed>
-<summary>Contributing Guidelines</summary>
+**Upsert**: Cria ou atualiza caso ja exista
 
-1. **Fork the Repository**: Start by forking the project repository to your github account.
-2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
-   ```sh
-   git clone https://github.com/censuradho/mui-bff
-   ```
-3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
-   ```sh
-   git checkout -b new-feature-x
-   ```
-4. **Make Your Changes**: Develop and test your changes locally.
-5. **Commit Your Changes**: Commit with a clear message describing your updates.
-   ```sh
-   git commit -m 'Implemented new feature x.'
-   ```
-6. **Push to github**: Push the changes to your forked repository.
-   ```sh
-   git push origin new-feature-x
-   ```
-7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and their motivations.
-8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch. Congratulations on your contribution!
-</details>
+Endpoint `POST /menu-group`
 
-<details closed>
-<summary>Contributor Graph</summary>
-<br>
-<p align="left">
-   <a href="https://github.com{/censuradho/mui-bff/}graphs/contributors">
-      <img src="https://contrib.rocks/image?repo=censuradho/mui-bff">
-   </a>
-</p>
-</details>
+Request body
 
----
+```json
+{
+	"id": 4,
+  "hourFrom": "",
+  "hourTo": "",
+  "label": "menu group 0",
+  "visible": true,
+  "menus": [
+    {
+			"id": 1,
+      "label": "menu 0",
+      "products": [
+        {
+					"id": 1,
+          "label": "product 0",
+          "limitAge": true,
+          "value": "100",
+          "visible": true
+        },
+				{
+					"id": 3,
+          "label": "product 0",
+          "limitAge": true,
+          "value": "100",
+          "visible": true
+        },
+				{
+          "label": "product 99",
+          "limitAge": true,
+          "value": "100",
+          "visible": true
+        }
+      ]
+    }
+  ]
+}
+```
 
-## 🎗 License
+**FindMany**
 
-This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
+Endpoint `GET /menu-group`
 
----
+Response body
 
-## 🙌 Acknowledgments
+```json
+[
+		{
+		"id": 1,
+		"label": "menu group 0",
+		"visible": true,
+		"storeId": 1,
+		"hourFrom": "",
+		"hourTo": "",
+		"createdAt": "2024-11-15T12:39:32.329Z",
+		"updatedAt": "2024-11-15T13:59:52.880Z",
+		"menus": [
+			{
+				"id": 1,
+				"label": "menu 0",
+				"groupId": 1,
+				"createdAt": "2024-11-15T13:48:05.000Z",
+				"updatedAt": "2024-11-15T13:59:52.880Z",
+				"products": [
+					{
+						"id": 4,
+						"label": "product 99",
+						"value": "100",
+						"image": "C:\\code\\estudos\\menu\\menu-bff\\src\\shared\\tmp\\1731848898808-900312694-WhatsApp Image 2024-10-25 at 11.54.43.jpeg",
+						"visible": true,
+						"limitAge": true,
+						"menuId": 1,
+						"createdAt": "2024-11-15T13:59:52.882Z",
+						"updatedAt": "2024-11-15T13:59:52.882Z"
+					}
+				]
+			}
+		]
+	},
+]
+```
 
-- List any resources, contributors, inspiration, etc. here.
+### Product
 
----
+**Delete**
+
+Endpoint `DELETE product/:productId/menu/:menuId/menuGroup/:groupId`
+
+**ImageUpload**: Upload da foto do produto
+
+Endpoint `PUT product/:productId/menu/:menuId/menuGroup/:groupId/image`
+
+
+Request body:
+
+application/form-data - file: File
+
+
