@@ -9,6 +9,7 @@ import { HttpException } from "@/domain/models/HttpException";
 import { ERRORS } from "@/shared/errors";
 import { StoreUserModel } from "@/domain/models/StoreUserModel";
 import { storeEntityMock } from '@/__mock__/store';
+import { FileUploadService } from '@/services/FileUpload.service';
 
 vi.mock('@/domain/repositories/storeUser/User.repository')
 vi.mock('@/domain/repositories/store/store.repository')
@@ -19,13 +20,14 @@ describe('AuthStoreUserRepository', () => {
   let repository: AuthStoreUserRepository
   let storeUserRepository: StoreUserRepository
   let storeRepository: StoreRepository
+  let fileUploadService: FileUploadService
 
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
-    console.log(ctx)
+    fileUploadService = new FileUploadService()
     storeUserRepository = new StoreUserRepository(ctx.prisma)
-    storeRepository = new StoreRepository(ctx.prisma)
+    storeRepository = new StoreRepository(ctx.prisma, fileUploadService)
 
     repository = new AuthStoreUserRepository(
       storeUserRepository,

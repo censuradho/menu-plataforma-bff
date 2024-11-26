@@ -4,8 +4,6 @@ import { MenuEntity, MenuWithProductsEntity, ProductEntity } from "@/domain/enti
 export const menuEntityMock: MenuEntity = {
   createdAt: new Date(),
   updatedAt: new Date(),
-  hourFrom: 'hourFrom',
-  hourTo: 'hourTo',
   id: 1,
   label: 'label',
   visible: true,
@@ -28,8 +26,6 @@ export const productEntityMock: ProductEntity = {
 export const menuWithProductsMockEntity: MenuWithProductsEntity = {
   createdAt: new Date(),
   updatedAt: new Date(),
-  hourFrom: 'hourFrom',
-  hourTo: 'hourTo',
   id: 1,
   label: 'label',
   visible: true,

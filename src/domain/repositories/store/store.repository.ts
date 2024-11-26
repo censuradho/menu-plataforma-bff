@@ -124,6 +124,7 @@ export class StoreRepository {
         hourFrom: true,
         hourTo: true,
         logo: true,
+        cuisineType: true,
         instagramUrl: true,
         facebook: true,
         name: true,
