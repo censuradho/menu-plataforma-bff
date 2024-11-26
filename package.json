@@ -12,7 +12,7 @@
     "migrate:dev": "prisma migrate dev",
     "generate": "prisma generate",
     "studio": "prisma studio",
-    "build": "tsc",
+    "build": "prisma generate & tsc",
     "start": "./dist/main.js",
     "test": "vitest",
     "coverage": "vitest run --coverage"
