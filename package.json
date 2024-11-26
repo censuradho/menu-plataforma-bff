@@ -12,7 +12,7 @@
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:status": "prisma migrate status",
-    "generate": "prisma generate",
+    "migrate:generate": "prisma generate",
     "studio": "prisma studio",
     "build": "npm run migrate:generate && npm run migrate:deploy && tsc && tsc-alias",
     "start": "node dist/main.js",
