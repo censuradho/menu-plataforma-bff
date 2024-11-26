@@ -14,7 +14,7 @@
     "migrate:status": "prisma migrate status",
     "generate": "prisma generate",
     "studio": "prisma studio",
-    "build": "npm run migrate:deploy && tsc && tsc-alias",
+    "build": "npm run migrate:generate && npm run migrate:deploy && tsc && tsc-alias",
     "start": "node dist/main.js",
     "test": "vitest",
     "coverage": "vitest run --coverage"
