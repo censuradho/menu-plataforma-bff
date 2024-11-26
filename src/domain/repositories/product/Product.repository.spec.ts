@@ -161,16 +161,16 @@ describe('ProductRepository', () => {
           id: productId
         },
         data: {
-          image: fileMock.path
+          image: fileMock.filename
         }
       })
     })
-
+    
     it ('Should remove previous file if product already have an image', async () => {
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue({
         ...productEntityMock,
-        image: fileMock.path
+        image: fileMock.filename
       })
 
       const validateMethodMock = vi.spyOn(repository, 'validate')
