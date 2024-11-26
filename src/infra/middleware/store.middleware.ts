@@ -21,7 +21,7 @@ export async function createStoreValidation (req: Request, res: Response, next: 
     validation.name = payload.name
     validation.numberOfEmployees = payload.numberOfEmployees
     validation.revenueEstimate = payload.revenueEstimate
-    validation.facebookUrl = payload.facebookUrl
+    validation.facebook = payload.facebook
     validation.instagramUrl = payload.instagramUrl
     validation.twitterUrl = payload.twitterUrl
     validation.tikTokUrl = payload.tikTokUrl

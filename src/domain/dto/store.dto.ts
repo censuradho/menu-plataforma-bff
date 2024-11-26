@@ -37,7 +37,7 @@ export class CreateStoreDTO {
 
   @IsOptional()
   @IsString()
-  facebookUrl?: string
+  facebook?: string
 
   @IsOptional()
   @IsString()

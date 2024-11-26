@@ -50,7 +50,7 @@ export class StoreRepository {
         ownerId,
         hourFrom: payload?.hourFrom,
         hourTo: payload?.hourTo,
-        facebook: payload?.facebookUrl,
+        facebook: payload?.facebook,
         instagramUrl: payload?.instagramUrl,
         tikTokUrl: payload?.tikTokUrl,
         twitterUrl: payload?.twitterUrl,

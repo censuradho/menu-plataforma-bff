@@ -14,7 +14,8 @@ import { helmetConfig } from './shared/config/helmet';
 
 const app = express()
 
-app.use(helmet(helmetConfig))
+// app.use(helmet(helmetConfig))
+
 app.use(loggerHttp)
 app.use(cookieParser())
 app.use(express.json())
