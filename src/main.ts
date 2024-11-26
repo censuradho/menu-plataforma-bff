@@ -10,11 +10,12 @@ import { environment } from './shared/environment'
 import { loggerHttp } from './shared/lib/logger'
 import { routes } from './infra/routes/routes'
 import path from 'path';
+import { helmetConfig } from './shared/config/helmet';
 
 const app = express()
 
+app.use(helmet(helmetConfig))
 app.use(loggerHttp)
-// app.use(helmet())
 app.use(cookieParser())
 app.use(express.json())
 app.use(cors(corsConfig))
