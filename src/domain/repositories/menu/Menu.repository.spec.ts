@@ -25,12 +25,44 @@ describe('MenuRepository', () => {
 
       await repository.upsert(storeId, createMenuMockPayload)
       
-      expect(mock.prisma.menu.update).toHaveBeenCalledWith({
+      expect(mock.prisma.menu.upsert).toHaveBeenCalledWith({
         where: {
           storeId,
           id: expect.any(Number)
+        },
+        update: expect.any(Object),
+        create: expect.any(Object),
+        include: {
+          products: true
         }
       })
+    })
+  })
+
+  describe('.findMany', () => {
+    it ('Should request menu with products, order by updatedAt desc', async () => {
+      mock.prisma.menu.findMany.mockResolvedValue([
+        menuWithProductsMockEntity
+      ])
+
+      const storeId = 2
+
+      const result = await repository.findMany(storeId)
+
+      expect(mock.prisma.menu.findMany).toHaveBeenCalledWith({
+        where: {
+          storeId,
+        },
+        include: {
+          products: true
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        }
+      })
+      expect(result).toStrictEqual([
+        menuWithProductsMockEntity
+      ])
     })
   })
 })
