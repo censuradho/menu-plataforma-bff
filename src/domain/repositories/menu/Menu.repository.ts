@@ -5,7 +5,6 @@ import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
 import { FindManyMenuQueryDTO } from './../../dto/menu.dto';
 import { IMenuRepository } from "./IMenu.repository";
-import { MenuListPaginateModel } from "@/domain/models/MenuListPaginateModel";
 
 export class MenuRepository implements IMenuRepository {
   constructor (
