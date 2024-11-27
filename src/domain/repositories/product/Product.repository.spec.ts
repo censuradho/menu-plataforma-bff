@@ -1,14 +1,12 @@
+import { fileMock } from "@/__mock__/file";
+import { deleteManyProductsPayloadMock, menuEntityMock, productEntityMock } from "@/__mock__/menu";
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
+import { HttpException } from "@/domain/models/HttpException";
+import { CloudflareR2Service } from "@/services/CloudflareR2.service";
+import { FileUploadService } from "@/services/FileUpload.service";
+import { ERRORS } from "@/shared/errors";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ProductRepository } from "./Product.repository";
-import e from "express";
-import { HttpException } from "@/domain/models/HttpException";
-import { ERRORS } from "@/shared/errors";
-import { deleteManyProductsPayloadMock, menuEntityMock, productEntityMock } from "@/__mock__/menu";
-import { FileUploadService } from "@/services/FileUpload.service";
-import { fileMock } from "@/__mock__/file";
-import { CloudinaryService } from "@/services/cloudinary.service";
-import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 
 vi.mock('@/services/FileUpload.service')
 
@@ -17,7 +15,6 @@ describe('ProductRepository', () => {
   let ctx: Context
   let repository: ProductRepository
   let uploadService: FileUploadService
-  let cloudinaryService: CloudinaryService
   let cloudflareR2Service: CloudflareR2Service
 
   const storeId = 1
@@ -29,14 +26,12 @@ describe('ProductRepository', () => {
     mock = createMockContext()
     ctx = mock as unknown as Context
     uploadService = new FileUploadService()
-    cloudinaryService = new CloudinaryService()
     cloudflareR2Service = new CloudflareR2Service()
 
 
     repository = new ProductRepository(
       ctx.prisma,
       uploadService,
-      cloudinaryService,
       cloudflareR2Service
     )
   })

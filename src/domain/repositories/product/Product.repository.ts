@@ -1,7 +1,6 @@
 import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
-import { CloudinaryService } from "@/services/cloudinary.service";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { environment } from "@/shared/environment";
 import { ERRORS } from "@/shared/errors";
@@ -11,7 +10,6 @@ export class ProductRepository {
   constructor (
     private prisma: PrismaClient,
     private fileUploadService: FileUploadService,
-    private cloudinaryService: CloudinaryService,
     private cloudflareR2Service: CloudflareR2Service
   ) {}
 
