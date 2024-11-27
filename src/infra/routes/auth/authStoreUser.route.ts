@@ -14,12 +14,16 @@ import {
 } from "@/infra/middleware/auth/authStoreUser.validation";
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
+import { EmailValidationTokenRepository } from "@/domain/repositories/emailValidationToken/EmailValidationToken.repository";
 
 const authStoreUserRoute = Router()
 
-const storeRepository = new StoreRepository(prisma, new CloudflareR2Service())
-const storeUserRepository = new StoreUserRepository(prisma)
-const repository = new AuthStoreUserRepository(storeUserRepository, storeRepository)
+const repository = new AuthStoreUserRepository(
+  new StoreUserRepository(prisma), 
+  new StoreRepository(prisma, new CloudflareR2Service()),
+  new EmailValidationTokenRepository(prisma)
+)
+
 const controller = new AuthStoreUserController(repository)
 
 authStoreUserRoute.post(
@@ -50,6 +54,12 @@ authStoreUserRoute.get(
 authStoreUserRoute.get(
   '/store-user/logout', 
   controller.logout.bind(controller)
+)
+
+authStoreUserRoute.get(
+  '/store-user/resend-email-validation', 
+  storeUserJwtMiddleware,
+  controller.resendEmailValidation.bind(controller)
 )
 
 export {

@@ -1,3 +1,4 @@
+import { EmailValidationTokenRepository } from './../../emailValidationToken/EmailValidationToken.repository';
 import { compare } from 'bcrypt';
 
 import { IsValidEmailDTO, SignInWithEmailAndPasswordDTO } from '@/domain/dto/authStoreuser.dto';
@@ -15,15 +16,21 @@ import { Jwt } from '@/shared/jwt';
 
 import { IAuthStoreUserRepository } from './IAuthStoreUser.repository';
 import { randomUUID } from 'crypto';
+import { CreateEmailValidationTokenDTO } from '@/domain/dto/emailValidationToken.dto';
 
 export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   constructor (
     private storeUserRepository: StoreUserRepository,
-    private storeRepository: StoreRepository
+    private storeRepository: StoreRepository,
+    private emailValidationTokenRepository: EmailValidationTokenRepository
   ) {}
 
   async signUpWithEmailAndPassword(payload: CreateStoreUserDTO) {
     const entity = await this.storeUserRepository.create(payload)
+
+    await this.emailValidationTokenRepository.create({
+      userId: entity.id
+    })
 
     return this.generateJWT(entity)
   }
@@ -73,5 +80,9 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     if (!entity) return null
 
     return new StoreUserModel(entity)
+  }
+
+  async resendEmailValidation (payload: CreateEmailValidationTokenDTO) {
+    await this.emailValidationTokenRepository.create(payload)
   }
 }

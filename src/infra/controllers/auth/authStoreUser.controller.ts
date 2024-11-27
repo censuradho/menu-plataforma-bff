@@ -92,4 +92,22 @@ export class AuthStoreUserController {
     signOutMethod(req, res)
     return res.sendStatus(204)
   }
+
+  async resendEmailValidation (req: Request, res: Response) {
+    try {
+      const user = req.user as JWTPayload
+
+      await this.authStoreUserRepository.resendEmailValidation({
+        userId: user.id
+      })
+      return res.sendStatus(200)
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
 }

@@ -20,11 +20,9 @@ export const environment = {
     secret: process.env.CLOUDINARY_SECRET,
   },
   emailVerification: {
-    /**
-     * In milliseconds
-     * @example 1000 * 60 * 10 // 10 min
-     * */
-    waitingTimeBeforeNew: 1000 * 60 * 10 
+    waitingTimeBeforeNew: 1000 * 60 * 10,
+    maxAttempts: 7,
+    penaltyTime: 1000 * 60 * 60 // 1h
   }
 }
 
