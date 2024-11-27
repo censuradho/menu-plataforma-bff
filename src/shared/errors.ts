@@ -21,5 +21,5 @@ export const ERRORS = {
   },
   FILE_UPLOAD: {
     REQUIRED: 'FILE_UPLOAD_FIELD_FILE_IS_REQUIRED'
-  }
+  },
 }

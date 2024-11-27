@@ -18,6 +18,14 @@ export const environment = {
     apiKey: process.env.CLOUDINARY_API_KEY,
     name: process.env.CLOUDINARY_NAME,
     secret: process.env.CLOUDINARY_SECRET,
-    
+  },
+  emailVerification: {
+    /**
+     * In milliseconds
+     * @example 1000 * 60 * 10 // 10 min
+     * */
+    waitingTimeBeforeNew: 1000 * 60 * 10 
   }
 }
+
+environment.emailVerification.waitingTimeBeforeNew
