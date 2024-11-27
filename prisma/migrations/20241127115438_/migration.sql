@@ -11,6 +11,14 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
+CREATE TABLE "assets" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "path" TEXT NOT NULL,
+    "size" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
 CREATE TABLE "Storestaff" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "fullName" TEXT NOT NULL,
@@ -36,6 +44,7 @@ CREATE TABLE "stores" (
     "hourTo" TEXT,
     "is24h" BOOLEAN NOT NULL DEFAULT false,
     "logo" TEXT,
+    "logoId" INTEGER,
     "document" TEXT NOT NULL,
     "documentType" TEXT NOT NULL,
     "cuisineType" TEXT NOT NULL,
@@ -43,6 +52,10 @@ CREATE TABLE "stores" (
     "revenueEstimate" TEXT NOT NULL,
     "numberOfEmployees" TEXT NOT NULL,
     "ownerId" TEXT NOT NULL,
+    "instagramUrl" TEXT,
+    "tikTokUrl" TEXT,
+    "facebook" TEXT,
+    "twitterUrl" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "stores_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -66,6 +79,7 @@ CREATE TABLE "products" (
     "description" TEXT,
     "value" TEXT NOT NULL,
     "image" TEXT,
+    "assetId" INTEGER NOT NULL,
     "visible" BOOLEAN NOT NULL DEFAULT true,
     "limitAge" BOOLEAN NOT NULL DEFAULT false,
     "menuId" INTEGER NOT NULL,
@@ -96,6 +110,9 @@ CREATE TABLE "_OperationModeToStore" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "stores_ownerId_key" ON "stores"("ownerId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "products_assetId_key" ON "products"("assetId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_OperationModeToStore_AB_unique" ON "_OperationModeToStore"("A", "B");

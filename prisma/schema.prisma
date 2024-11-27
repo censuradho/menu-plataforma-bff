@@ -27,9 +27,9 @@ model StoreUser {
 model Asset {
   id Int  @id @default(autoincrement())
 
-  publicId String
-  url String
-
+  path String
+  size Int
+  
   createdAt DateTime @default(now())
 
   @@map("assets")
@@ -133,6 +133,8 @@ model Product {
   value String
 
   image String?
+
+  assetId Int? @unique
 
   visible Boolean @default(true)
   limitAge Boolean @default(false)

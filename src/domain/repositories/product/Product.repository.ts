@@ -1,7 +1,9 @@
 import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
+import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 import { CloudinaryService } from "@/services/cloudinary.service";
 import { FileUploadService } from "@/services/FileUpload.service";
+import { environment } from "@/shared/environment";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
 
@@ -9,7 +11,8 @@ export class ProductRepository {
   constructor (
     private prisma: PrismaClient,
     private fileUploadService: FileUploadService,
-    private cloudinaryService: CloudinaryService  
+    private cloudinaryService: CloudinaryService,
+    private cloudflareR2Service: CloudflareR2Service
   ) {}
 
   async validate (
@@ -116,21 +119,40 @@ export class ProductRepository {
       menuId,
     )
 
-    const b64 = Buffer.from(file.buffer).toString("base64");
-    const dataURI = "data:" + file.mimetype + ";base64," + b64;
+    const product = await this.prisma.product.findFirst({
+      where: {
+        menuId,
+        id: productId
+      }
+    })
 
-    // const product = await this.prisma.product.findFirst({
-    //   where: {
-    //     menuId,
-    //     id: productId
-    //   }
-    // })
+    if (product?.image) {
+      const filePath = product
+        ?.image
+        .split(environment.cloudFlare.r2.publicAccessUrl)[1]
+        .replace('/', '')
 
-    // if (product?.image) {
-    //   await this.fileUploadService.removeFile(product.image)
-    // }
+      await this.cloudflareR2Service.deleteFile(filePath)
 
-    const image = await this.cloudinaryService.upload(dataURI)
+      await this.prisma.asset.delete({
+        where: {
+          id: product.assetId!!
+        }
+      })
+    }
+
+    const uploadedFile = await this.cloudflareR2Service.uploadFile(
+      file.buffer,
+      file.originalname,
+      file.mimetype,
+    )
+
+    const asset = await this.prisma.asset.create({
+      data: {
+        path: uploadedFile.url,
+        size: file.size,
+      }
+    })
 
     await this.prisma.product.update({
       where: {
@@ -138,7 +160,8 @@ export class ProductRepository {
         id: productId
       },
       data: {
-        image: image.url
+        image: asset.path,
+        assetId: asset.id
       }
     })
   }

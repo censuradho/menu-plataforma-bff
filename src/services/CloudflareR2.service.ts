@@ -1,5 +1,5 @@
 import { environment } from "@/shared/environment";
-import { S3 } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, ListBucketsCommand, PutObjectCommand, S3 } from "@aws-sdk/client-s3";
 
 export class CloudflareR2Service {
   constructor (
@@ -13,4 +13,39 @@ export class CloudflareR2Service {
     }),
     private bucket: string = "menu"
   ) {}
+
+  generatePublicURL (key: string) {
+    return `${environment.cloudFlare.r2.publicAccessUrl}/${key}`;
+  };
+
+  async uploadFile (
+    buffer: Buffer, 
+    key: string,
+    contentType: string
+  ) {
+    const fileName = `${new Date().getTime()}-${key}`
+
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: fileName,
+      Body: buffer,
+      ContentType: contentType,
+    });
+    const result = await this.s3.send(command);
+
+    return {
+      result,
+      fileName,
+      url: this.generatePublicURL(fileName)
+    }
+  }
+
+  async deleteFile (fileName: string) {
+    const command = new DeleteObjectCommand({
+      Bucket: this.bucket,
+      Key: fileName
+    })
+
+    await this.s3.send(command);
+  }
 }

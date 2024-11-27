@@ -8,6 +8,7 @@ import { FileUploadService } from "@/services/FileUpload.service";
 import { uploadSingleFileMiddleware } from "../middleware/fileUpload.middleware";
 import { storeMiddleware } from "../middleware/auth/store.middleware";
 import { CloudinaryService } from "@/services/cloudinary.service";
+import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 
 
 const productRoutes = Router()
@@ -15,8 +16,10 @@ const productRoutes = Router()
 const repository = new ProductRepository(
   prisma,
   new FileUploadService(),
-  new CloudinaryService()
+  new CloudinaryService(),
+  new CloudflareR2Service()
 )
+
 const controller = new ProductController(repository)
 
 productRoutes.delete(
