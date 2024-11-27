@@ -1,8 +1,9 @@
 import { CreateEmailValidationTokenDTO } from '@/domain/dto/emailValidationToken.dto';
 import { HttpException } from '@/domain/models/HttpException';
+import { environment } from '@/shared/environment';
 import { ERRORS } from '@/shared/errors';
 import { PrismaClient } from '@prisma/client';
-import { isAfter, isBefore } from 'date-fns'
+import { isAfter, isBefore, addMilliseconds } from 'date-fns'
 
 export class EmailValidationTokenRepository {
   constructor (
@@ -22,11 +23,21 @@ export class EmailValidationTokenRepository {
     const alreadyExist = await this
       .findFirst(payload.code, payload.userId)
 
-    if (alreadyExist && alreadyExist.expireAt) {
-      // TODO: Regerar o token
-    }
+    const compareDate = addMilliseconds(new Date(), environment.emailVerification.waitingTimeBeforeNew)
 
-    if (alreadyExist && isBefore(new Date(), alreadyExist.expireAt))
+    if (alreadyExist && isBefore(alreadyExist.createdAt, compareDate)) throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.WAITING_UNTIL_YOU_CAN_RESEND)
+
+    
+    if (alreadyExist && isAfter(new Date(), alreadyExist.expireAt)) await this.destroy(alreadyExist.id)
+
+    
   }
 
+  async destroy (id: number) {
+    await this.prisma.emailValidationToken.delete({
+      where: {
+        id
+      }
+    })
+  }
 }
