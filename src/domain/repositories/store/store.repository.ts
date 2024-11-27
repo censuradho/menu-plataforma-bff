@@ -1,5 +1,6 @@
 import { CreateStoreDTO } from "@/domain/dto/store.dto";
 import { HttpException } from "@/domain/models/HttpException";
+import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
@@ -7,7 +8,7 @@ import { PrismaClient } from "@prisma/client";
 export class StoreRepository {
   constructor (
     private prisma: PrismaClient,
-    private fileUploadService: FileUploadService
+    private cloudflareR2Service: CloudflareR2Service
   ) {}
 
   async findStoreByOwnerId (id: string) {

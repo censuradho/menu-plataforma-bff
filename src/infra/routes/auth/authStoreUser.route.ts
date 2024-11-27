@@ -5,20 +5,19 @@ import { StoreUserRepository } from "@/domain/repositories/storeUser/User.reposi
 
 import { prisma } from "@/services/PrismaClient";
 
-import { 
-  authStoreUserSignUpWithEmailAndPasswordValidation, 
-  isValidEmailValidation, 
-  signInWithEmailAndPasswordRequestBodyValidation 
-} from "@/infra/middleware/auth/authStoreUser.validation";
-import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.controller";
-import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
 import { StoreRepository } from "@/domain/repositories/store/store.repository";
-import { FileUploadService } from "@/services/FileUpload.service";
+import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.controller";
+import {
+  authStoreUserSignUpWithEmailAndPasswordValidation,
+  isValidEmailValidation,
+  signInWithEmailAndPasswordRequestBodyValidation
+} from "@/infra/middleware/auth/authStoreUser.validation";
+import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
+import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 
 const authStoreUserRoute = Router()
 
-const fileUploadService = new FileUploadService()
-const storeRepository = new StoreRepository(prisma, fileUploadService)
+const storeRepository = new StoreRepository(prisma, new CloudflareR2Service())
 const storeUserRepository = new StoreUserRepository(prisma)
 const repository = new AuthStoreUserRepository(storeUserRepository, storeRepository)
 const controller = new AuthStoreUserController(repository)
@@ -55,4 +54,4 @@ authStoreUserRoute.get(
 
 export {
   authStoreUserRoute
-}
+};

@@ -10,6 +10,7 @@ import { ERRORS } from "@/shared/errors";
 import { StoreUserModel } from "@/domain/models/StoreUserModel";
 import { storeEntityMock } from '@/__mock__/store';
 import { FileUploadService } from '@/services/FileUpload.service';
+import { CloudflareR2Service } from '@/services/CloudflareR2.service';
 
 vi.mock('@/domain/repositories/storeUser/User.repository')
 vi.mock('@/domain/repositories/store/store.repository')
@@ -20,14 +21,15 @@ describe('AuthStoreUserRepository', () => {
   let repository: AuthStoreUserRepository
   let storeUserRepository: StoreUserRepository
   let storeRepository: StoreRepository
-  let fileUploadService: FileUploadService
+  let cloudflareService: CloudflareR2Service
 
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
-    fileUploadService = new FileUploadService()
     storeUserRepository = new StoreUserRepository(ctx.prisma)
-    storeRepository = new StoreRepository(ctx.prisma, fileUploadService)
+    cloudflareService = new CloudflareR2Service()
+
+    storeRepository = new StoreRepository(ctx.prisma, cloudflareService)
 
     repository = new AuthStoreUserRepository(
       storeUserRepository,
