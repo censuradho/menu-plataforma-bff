@@ -50,4 +50,19 @@ export class CloudflareR2Service {
 
     await this.s3.send(command);
   }
+
+  async deleteByKey (fileName: string) {
+    try {
+      const Key = this.generatePublicURL(fileName)
+
+      const command = new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key
+      })
+  
+      await this.s3.send(command);
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }

@@ -95,12 +95,7 @@ export class StoreRepository {
     if (!store) throw new HttpException(404, ERRORS.STORE.NOT_FOUND)
 
     if (store?.logo) {
-      const filePath = store
-      ?.logo
-      .split(environment.cloudFlare.r2.publicAccessUrl)[1]
-      .replace('/', '')
-
-      await this.cloudflareR2Service.deleteFile(filePath)
+      await this.cloudflareR2Service.deleteByKey(store?.logo)
 
       await this.prisma.asset.delete({
         where: {
@@ -118,7 +113,7 @@ export class StoreRepository {
 
     const asset = await this.prisma.asset.create({
       data: {
-        path: uploadedFile.url,
+        path: uploadedFile.fileName,
         size: file.size,
       }
     })

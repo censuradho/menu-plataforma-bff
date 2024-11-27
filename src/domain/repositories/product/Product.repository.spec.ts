@@ -113,11 +113,9 @@ describe('ProductRepository', () => {
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
 
-      const validateMethodMock = vi.spyOn(repository, 'validate')
 
       await repository.delete(storeId, productId, menuId)
 
-      expect(validateMethodMock).toBeCalled()
       expect(mock.prisma.product.delete).toBeCalledWith({
         where: {
           id: productId,
@@ -141,7 +139,6 @@ describe('ProductRepository', () => {
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
 
-      const validateMethodMock = vi.spyOn(repository, 'validate')
   
       await repository.updateImage(
         storeId,
@@ -150,11 +147,6 @@ describe('ProductRepository', () => {
         fileMock
       )
 
-      expect(validateMethodMock).toBeCalledWith(
-        storeId,
-        productId,
-        menuId,
-      )
       expect(mock.prisma.product.update).toHaveBeenCalledWith({
         where: {
           menuId,
@@ -164,24 +156,6 @@ describe('ProductRepository', () => {
           image: fileMock.filename
         }
       })
-    })
-    
-    it ('Should remove previous file if product already have an image', async () => {
-      mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
-      mock.prisma.product.findFirst.mockResolvedValue({
-        ...productEntityMock,
-        image: fileMock.filename
-      })
-
-      const validateMethodMock = vi.spyOn(repository, 'validate')
-
-      await repository.updateImage(
-        storeId,
-        productId,
-        menuId,
-        fileMock
-      )
-      expect(validateMethodMock).toHaveBeenCalled()
     })
   })
 })

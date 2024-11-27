@@ -1,7 +1,6 @@
 import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
-import { environment } from "@/shared/environment";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
 
@@ -53,6 +52,7 @@ export class ProductRepository {
 
     if (!product) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
 
+
     if (product.image) {
       await this.deleteFile(product.image, product.assetId!!)
     }
@@ -66,7 +66,25 @@ export class ProductRepository {
   }
 
   async deleteMany (storeId: number, payload: DeleteManyProductsDTO) {
-    const requests = payload.products.map(product => 
+    const products = await Promise.all(
+        payload.products.map(value => this.find(
+          storeId,
+          value.productId,
+          value.menuId,
+        )
+      )
+    )
+
+    const productsWithImage = products.filter(value => !!value?.image)
+
+    const requestToDeleteAssets = productsWithImage.map( value =>
+      this.deleteFile(
+        value!!.image!!,
+        value?.assetId!!
+      )
+    )
+    
+    const requestsToDeleteProducts = payload.products.map(product => 
       this.prisma.store.update({
         where: {
           id: storeId,
@@ -90,7 +108,10 @@ export class ProductRepository {
       })
     )
 
-    await Promise.all(requests)
+    await Promise.all([
+      ...requestsToDeleteProducts,
+      ...requestToDeleteAssets
+    ])
   }
 
   async updateImage (
@@ -119,7 +140,7 @@ export class ProductRepository {
 
     const asset = await this.prisma.asset.create({
       data: {
-        path: uploadedFile.url,
+        path: uploadedFile.fileName,
         size: file.size,
       }
     })
@@ -130,18 +151,14 @@ export class ProductRepository {
         id: productId
       },
       data: {
-        image: asset.path,
+        image: uploadedFile.fileName,
         assetId: asset.id
       }
     })
   }
 
-  async deleteFile (url: string, assetId: number) {
-    const filePath = url
-    .split(environment.cloudFlare.r2.publicAccessUrl)[1]
-    .replace('/', '')
-
-    await this.cloudflareR2Service.deleteFile(filePath)
+  async deleteFile (fileName: string, assetId: number) {
+    await this.cloudflareR2Service.deleteByKey(fileName)
 
     await this.prisma.asset.delete({
       where: {
