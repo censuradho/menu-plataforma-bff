@@ -8,9 +8,9 @@ export const environment = {
   CORS: process.env.CORS?.split(',') || [],
   cloudFlare: {
     r2: {
-      accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID,
-      secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
-      url: process.env.CLOUDFLARE_R2_URL,
+      accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID as string,
+      secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY as string,
+      url: process.env.CLOUDFLARE_R2_URL as string,
     }
   },
   cloudinary: {

@@ -1,17 +1,16 @@
 import { environment } from "@/shared/environment";
-import { S3 } from "aws-sdk";
+import { S3 } from "@aws-sdk/client-s3";
 
 export class CloudflareR2Service {
   constructor (
     private s3 = new S3({
+      region: 'auto',
       endpoint: environment.cloudFlare.r2.url,
-      accessKeyId: environment.cloudFlare.r2.accessKeyId,
-      secretAccessKey: environment.cloudFlare.r2.secretAccessKey,
-      signatureVersion: 'v4'
-    })
+      credentials: {
+        accessKeyId: environment.cloudFlare.r2.accessKeyId,
+        secretAccessKey: environment.cloudFlare.r2.secretAccessKey,
+      }
+    }),
+    private bucket: string = "menu"
   ) {}
-
-  async listBuckets () {
-    return await this.s3.listBuckets().promise()
-  }
 }
