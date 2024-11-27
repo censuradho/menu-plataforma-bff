@@ -14,6 +14,7 @@ import { ERRORS } from '@/shared/errors';
 import { Jwt } from '@/shared/jwt';
 
 import { IAuthStoreUserRepository } from './IAuthStoreUser.repository';
+import { randomUUID } from 'crypto';
 
 export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   constructor (
@@ -39,11 +40,14 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
 
     const jwtPayload = new JWTPayload(
       user.id,
-      storeId
+      storeId,
     )
 
     const token = Jwt.generateAccessToken(
-      jwtPayload
+      jwtPayload,
+      {
+        jwtid: randomUUID(),
+      }
     )
 
     return token

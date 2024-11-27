@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model EmailValidationToken {
+  id Int  @id @default(autoincrement())
+
+  code String
+
+  expireAt DateTime
+
+  userId String @unique
+
+  createdAt DateTime @default(now())
+  @@map("emailValidationTokens")
+}
+
 model StoreUser {
   id String @id
   firstName String @default("")
@@ -16,8 +29,9 @@ model StoreUser {
   email String
   password String
 
-  store Store?
+  isVerified Boolean? @default(false)
 
+  store Store?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
@@ -33,32 +47,6 @@ model Asset {
   createdAt DateTime @default(now())
 
   @@map("assets")
-}
-
-model StoreStaff  {
-  id String @id
-
-  fullName String
-  email String
-  password String
-
-  storeId Int
-  store Store @relation(fields: [storeId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@map("Storestaff")
-}
-
-model OperationMode {
-  id Int @id @default(autoincrement())
-
-  label String
-
-  stores Store[]
-
-  @@map("operationModes")
 }
 
 model Store {
@@ -86,10 +74,6 @@ model Store {
 
   ownerId String @unique
   owner StoreUser @relation(fields: [ownerId], references: [id])
-
-  staffs StoreStaff[]
-
-  operationMode OperationMode[]
 
   menus Menu[]
 
@@ -138,8 +122,6 @@ model Product {
   visible Boolean @default(true)
   limitAge Boolean @default(false)
 
-  customPrices ProductCustomPrice[]
-
   menuId Int
   menu Menu @relation(fields: [menuId], references: [id])
 
@@ -147,20 +129,4 @@ model Product {
   updatedAt DateTime @default(now())
 
   @@map("products")
-}
-
-model ProductCustomPrice {
-  id Int @id @default(autoincrement())
-
-  value String
-  code String
-  active Boolean
-
-  productId Int
-  product Product @relation(fields: [productId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  
-  @@map("productCustomPrice")
 }
