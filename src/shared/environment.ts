@@ -12,5 +12,8 @@ export const environment = {
       secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
       url: process.env.CLOUDFLARE_R2_URL,
     }
+  },
+  cloudnary: {
+    
   }
 }
