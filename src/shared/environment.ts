@@ -13,7 +13,9 @@ export const environment = {
       url: process.env.CLOUDFLARE_R2_URL,
     }
   },
-  cloudnary: {
-    
+  cloudinary: {
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    name: process.env.CLOUDINARY_NAME,
+    secret: process.env.CLOUDINARY_SECRET,
   }
 }

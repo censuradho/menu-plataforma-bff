@@ -7,6 +7,7 @@ import { ERRORS } from "@/shared/errors";
 import { deleteManyProductsPayloadMock, menuEntityMock, productEntityMock } from "@/__mock__/menu";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { fileMock } from "@/__mock__/file";
+import { CloudinaryService } from "@/services/cloudinary.service";
 
 vi.mock('@/services/FileUpload.service')
 
@@ -15,7 +16,7 @@ describe('ProductRepository', () => {
   let ctx: Context
   let repository: ProductRepository
   let uploadService: FileUploadService
-
+  let cloudinaryService: CloudinaryService
   const storeId = 1
   const menuId = 1
   const productId = 1
@@ -25,10 +26,13 @@ describe('ProductRepository', () => {
     mock = createMockContext()
     ctx = mock as unknown as Context
     uploadService = new FileUploadService()
+    cloudinaryService = new CloudinaryService()
+
 
     repository = new ProductRepository(
       ctx.prisma,
-      uploadService
+      uploadService,
+      cloudinaryService
     )
   })
 

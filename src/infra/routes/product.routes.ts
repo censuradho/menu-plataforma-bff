@@ -7,13 +7,15 @@ import { storeUserJwtMiddleware } from "../middleware/auth/storeUserJWT.middlewa
 import { FileUploadService } from "@/services/FileUpload.service";
 import { uploadSingleFileMiddleware } from "../middleware/fileUpload.middleware";
 import { storeMiddleware } from "../middleware/auth/store.middleware";
+import { CloudinaryService } from "@/services/cloudinary.service";
 
 
 const productRoutes = Router()
 
 const repository = new ProductRepository(
   prisma,
-  new FileUploadService()
+  new FileUploadService(),
+  new CloudinaryService()
 )
 const controller = new ProductController(repository)
 

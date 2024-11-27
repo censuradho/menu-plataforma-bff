@@ -24,6 +24,17 @@ model StoreUser {
   @@map("users")
 }
 
+model Asset {
+  id Int  @id @default(autoincrement())
+
+  publicId String
+  url String
+
+  createdAt DateTime @default(now())
+
+  @@map("assets")
+}
+
 model StoreStaff  {
   id String @id
 
@@ -60,6 +71,8 @@ model Store {
   is24h Boolean @default(false)
 
   logo String?
+
+  logoId Int?
 
   document String
   documentType String

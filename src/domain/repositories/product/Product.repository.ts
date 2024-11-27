@@ -1,5 +1,6 @@
 import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
+import { CloudinaryService } from "@/services/cloudinary.service";
 import { FileUploadService } from "@/services/FileUpload.service";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
@@ -7,7 +8,8 @@ import { PrismaClient } from "@prisma/client";
 export class ProductRepository {
   constructor (
     private prisma: PrismaClient,
-    private fileUploadService: FileUploadService
+    private fileUploadService: FileUploadService,
+    private cloudinaryService: CloudinaryService  
   ) {}
 
   async validate (
@@ -114,17 +116,21 @@ export class ProductRepository {
       menuId,
     )
 
-    const product = await this.prisma.product.findFirst({
-      where: {
-        menuId,
-        id: productId
-      }
-    })
+    const b64 = Buffer.from(file.buffer).toString("base64");
+    const dataURI = "data:" + file.mimetype + ";base64," + b64;
 
-    if (product?.image) {
-      await this.fileUploadService.removeFile(product.image)
-    }
+    // const product = await this.prisma.product.findFirst({
+    //   where: {
+    //     menuId,
+    //     id: productId
+    //   }
+    // })
 
+    // if (product?.image) {
+    //   await this.fileUploadService.removeFile(product.image)
+    // }
+
+    const image = await this.cloudinaryService.upload(dataURI)
 
     await this.prisma.product.update({
       where: {
@@ -132,7 +138,7 @@ export class ProductRepository {
         id: productId
       },
       data: {
-        image: file.filename
+        image: image.url
       }
     })
   }
