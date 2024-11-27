@@ -1,7 +1,7 @@
 import { CreateStoreDTO } from "@/domain/dto/store.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
-import { FileUploadService } from "@/services/FileUpload.service";
+import { environment } from "@/shared/environment";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
 
@@ -95,15 +95,41 @@ export class StoreRepository {
     if (!store) throw new HttpException(404, ERRORS.STORE.NOT_FOUND)
 
     if (store?.logo) {
-      await this.fileUploadService.removeFile(store.logo)
+      const filePath = store
+      ?.logo
+      .split(environment.cloudFlare.r2.publicAccessUrl)[1]
+      .replace('/', '')
+
+      await this.cloudflareR2Service.deleteFile(filePath)
+
+      await this.prisma.asset.delete({
+        where: {
+          id: store.logoId!!
+        }
+      })
     }
+
+    const uploadedFile = await this.cloudflareR2Service.uploadFile(
+      file.buffer,
+      file.originalname,
+      file.mimetype,
+      'store-avatar'
+    )
+
+    const asset = await this.prisma.asset.create({
+      data: {
+        path: uploadedFile.url,
+        size: file.size,
+      }
+    })
 
     await this.prisma.store.update({
       where: {
         id
       },
       data: {
-        logo: file.filename
+        logo: asset.path,
+        logoId: asset.id
       }
     })
 

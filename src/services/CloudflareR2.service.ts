@@ -1,5 +1,6 @@
 import { environment } from "@/shared/environment";
 import { DeleteObjectCommand, ListBucketsCommand, PutObjectCommand, S3 } from "@aws-sdk/client-s3";
+import { format } from "date-fns";
 
 export class CloudflareR2Service {
   constructor (
@@ -21,9 +22,10 @@ export class CloudflareR2Service {
   async uploadFile (
     buffer: Buffer, 
     key: string,
-    contentType: string
+    contentType: string,
+    folder: string
   ) {
-    const fileName = `${new Date().getTime()}-${key}`
+    const fileName = `${folder}/${format(new Date(), 'yyyy-MM-dd')}/${new Date().getTime()}-${key}`
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,

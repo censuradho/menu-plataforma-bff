@@ -143,6 +143,7 @@ export class ProductRepository {
       file.buffer,
       file.originalname,
       file.mimetype,
+      'products'
     )
 
     const asset = await this.prisma.asset.create({

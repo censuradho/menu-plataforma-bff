@@ -71,7 +71,6 @@ model Store {
   is24h Boolean @default(false)
 
   logo String?
-
   logoId Int?
 
   document String
