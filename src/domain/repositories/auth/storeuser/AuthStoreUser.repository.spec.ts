@@ -1,16 +1,14 @@
-import { StoreRepository } from '@/domain/repositories/store/store.repository';
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
-import { describe, expect, it, vi, beforeEach, Mock } from "vitest";
+import { StoreRepository } from '@/domain/repositories/store/store.repository';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthStoreUserRepository } from "./AuthStoreUser.repository";
 
-import { StoreUserRepository } from "@/domain/repositories/storeUser/User.repository";
 import { createStoreUserDTOPayloadMock, loginStoreUserDTOMock, storeUserEntityMock } from "@/__mock__/storeUser";
 import { HttpException } from "@/domain/models/HttpException";
-import { ERRORS } from "@/shared/errors";
 import { StoreUserModel } from "@/domain/models/StoreUserModel";
-import { storeEntityMock } from '@/__mock__/store';
-import { FileUploadService } from '@/services/FileUpload.service';
+import { StoreUserRepository } from "@/domain/repositories/storeUser/User.repository";
 import { CloudflareR2Service } from '@/services/CloudflareR2.service';
+import { ERRORS } from "@/shared/errors";
 
 vi.mock('@/domain/repositories/storeUser/User.repository')
 vi.mock('@/domain/repositories/store/store.repository')

@@ -1,7 +1,6 @@
 import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
-import { FileUploadService } from "@/services/FileUpload.service";
 import { environment } from "@/shared/environment";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
@@ -9,40 +8,36 @@ import { PrismaClient } from "@prisma/client";
 export class ProductRepository {
   constructor (
     private prisma: PrismaClient,
-    private fileUploadService: FileUploadService,
     private cloudflareR2Service: CloudflareR2Service
   ) {}
-
-  async validate (
+  async find (
     storeId: number,
     productId: number,
     menuId: number
   ) {
- 
-
-    const menu = await this.prisma.menu.findFirst({
+    const store  = await this.prisma.store.findFirst({
       where: {
-        id: menuId,
-        storeId
+        id: storeId,
       },
       select: {
-        id: true
+        menus: {
+          where: {
+            id: menuId
+          },
+          select: {
+            products: {
+              where: {
+                id: productId
+              },
+            }
+          }
+        }
       }
     })
 
-    if (!menu) throw new HttpException(404, ERRORS.MENU.NOT_FOUND)
+    const product = store?.menus[0].products[0]
 
-    const product = await this.prisma.product.findFirst({
-      where: {
-        id: productId,
-        menuId
-      },
-      select: {
-        id: true
-      }
-    })
-
-    if (!product) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
+    return product
   }
 
   async delete (
@@ -50,23 +45,16 @@ export class ProductRepository {
     productId: number,
     menuId: number,
   ) {
-    await this.validate(
+    const product = await this.find(
       storeId,
       productId,
       menuId,
     )
 
-    const product = await this.prisma.product.findFirst({
-      where: {
-        id: productId,
-        menuId
-      }
-    })
-
     if (!product) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
 
     if (product.image) {
-      await this.fileUploadService.removeFile(product.image)
+      await this.deleteFile(product.image, product.assetId!!)
     }
     
     await this.prisma.product.delete({
@@ -111,32 +99,15 @@ export class ProductRepository {
     menuId: number,
     file: Express.Multer.File
   ) {
-    await this.validate(
+
+    const product = await this.find(
       storeId,
       productId,
-      menuId,
+      menuId
     )
 
-    const product = await this.prisma.product.findFirst({
-      where: {
-        menuId,
-        id: productId
-      }
-    })
-
     if (product?.image) {
-      const filePath = product
-        ?.image
-        .split(environment.cloudFlare.r2.publicAccessUrl)[1]
-        .replace('/', '')
-
-      await this.cloudflareR2Service.deleteFile(filePath)
-
-      await this.prisma.asset.delete({
-        where: {
-          id: product.assetId!!
-        }
-      })
+      await this.deleteFile(product.image, product.assetId!!)
     }
 
     const uploadedFile = await this.cloudflareR2Service.uploadFile(
@@ -161,6 +132,20 @@ export class ProductRepository {
       data: {
         image: asset.path,
         assetId: asset.id
+      }
+    })
+  }
+
+  async deleteFile (url: string, assetId: number) {
+    const filePath = url
+    .split(environment.cloudFlare.r2.publicAccessUrl)[1]
+    .replace('/', '')
+
+    await this.cloudflareR2Service.deleteFile(filePath)
+
+    await this.prisma.asset.delete({
+      where: {
+        id: assetId!!
       }
     })
   }

@@ -14,7 +14,6 @@ describe('ProductRepository', () => {
   let mock: MockContext
   let ctx: Context
   let repository: ProductRepository
-  let uploadService: FileUploadService
   let cloudflareR2Service: CloudflareR2Service
 
   const storeId = 1
@@ -25,13 +24,11 @@ describe('ProductRepository', () => {
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
-    uploadService = new FileUploadService()
     cloudflareR2Service = new CloudflareR2Service()
 
 
     repository = new ProductRepository(
       ctx.prisma,
-      uploadService,
       cloudflareR2Service
     )
   })
@@ -153,7 +150,6 @@ describe('ProductRepository', () => {
         fileMock
       )
 
-      expect(uploadService.removeFile).not.toHaveBeenCalled()
       expect(validateMethodMock).toBeCalledWith(
         storeId,
         productId,
@@ -185,7 +181,6 @@ describe('ProductRepository', () => {
         menuId,
         fileMock
       )
-      expect(uploadService.removeFile).toHaveBeenCalled()
       expect(validateMethodMock).toHaveBeenCalled()
     })
   })

@@ -1,6 +1,5 @@
 import { ProductRepository } from "@/domain/repositories/product/Product.repository";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
-import { FileUploadService } from "@/services/FileUpload.service";
 import { prisma } from "@/services/PrismaClient";
 import { Router } from "express";
 import { ProductController } from "../controllers/product.controller";
@@ -14,9 +13,9 @@ const productRoutes = Router()
 
 const repository = new ProductRepository(
   prisma,
-  new FileUploadService(),
   new CloudflareR2Service()
 )
+
 const controller = new ProductController(repository)
 
 productRoutes.delete(
@@ -47,3 +46,4 @@ productRoutes.post(
 export {
   productRoutes
 };
+
