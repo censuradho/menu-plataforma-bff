@@ -1,3 +1,4 @@
+import { MailchimpTransactionalService } from './../../../../services/MailchimpTransactional.service';
 import { EmailValidationTokenRepository } from './../../emailValidationToken/EmailValidationToken.repository';
 import { compare } from 'bcrypt';
 
@@ -22,7 +23,8 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   constructor (
     private storeUserRepository: StoreUserRepository,
     private storeRepository: StoreRepository,
-    private emailValidationTokenRepository: EmailValidationTokenRepository
+    private emailValidationTokenRepository: EmailValidationTokenRepository,
+    private mailchimpTransactionalService: MailchimpTransactionalService
   ) {}
 
   async signUpWithEmailAndPassword(payload: CreateStoreUserDTO) {
@@ -83,6 +85,8 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   }
 
   async resendEmailValidation (payload: CreateEmailValidationTokenDTO) {
-    await this.emailValidationTokenRepository.create(payload)
+    const emailToken = await this.emailValidationTokenRepository.create(payload)
+
+
   }
 }

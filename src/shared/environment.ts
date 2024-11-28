@@ -25,7 +25,8 @@ export const environment = {
     penaltyTime: 1000 * 60 * 60 // 1h
   },
   mailchimp: {
-    apiKey: process.env.MAIL_CHIMP_API_KEY || ''
+    marketingApiKey: process.env.MAIL_CHIMP_MARKETING_API_KEY || '',
+    mandrillApiKey: process.env.MANDRILL_API_KEY || ''
   }
 }
 

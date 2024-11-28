@@ -1,3 +1,4 @@
+import { MailchimpTransactionalService } from './../../../../services/MailchimpTransactional.service';
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
 import { StoreRepository } from '@/domain/repositories/store/store.repository';
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -9,6 +10,7 @@ import { StoreUserModel } from "@/domain/models/StoreUserModel";
 import { StoreUserRepository } from "@/domain/repositories/storeUser/User.repository";
 import { CloudflareR2Service } from '@/services/CloudflareR2.service';
 import { ERRORS } from "@/shared/errors";
+import { EmailValidationTokenRepository } from '../../emailValidationToken/EmailValidationToken.repository';
 
 vi.mock('@/domain/repositories/storeUser/User.repository')
 vi.mock('@/domain/repositories/store/store.repository')
@@ -20,18 +22,24 @@ describe('AuthStoreUserRepository', () => {
   let storeUserRepository: StoreUserRepository
   let storeRepository: StoreRepository
   let cloudflareService: CloudflareR2Service
+  let mailchimpTransactionalService: MailchimpTransactionalService
+  let emailValidationTokenRepository: EmailValidationTokenRepository
 
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
     storeUserRepository = new StoreUserRepository(ctx.prisma)
     cloudflareService = new CloudflareR2Service()
+    mailchimpTransactionalService = new MailchimpTransactionalService()
+    emailValidationTokenRepository = new EmailValidationTokenRepository(ctx.prisma)
 
     storeRepository = new StoreRepository(ctx.prisma, cloudflareService)
 
     repository = new AuthStoreUserRepository(
       storeUserRepository,
-      storeRepository
+      storeRepository,
+      emailValidationTokenRepository,
+      mailchimpTransactionalService
     )
   })
 

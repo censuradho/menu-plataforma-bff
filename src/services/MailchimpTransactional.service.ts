@@ -4,11 +4,10 @@ import Mailchimp  from '@mailchimp/mailchimp_transactional'
 
 export class MailchimpTransactionalService {
   constructor (
-    private mailchimp = Mailchimp(environment.mailchimp.apiKey)
+    private mailchimp = Mailchimp(environment.mailchimp.mandrillApiKey)
   ) {}
 
-  async test () {
-    const response = await this.mailchimp.users.ping()
-    console.log(response)
+  async send (request: Mailchimp.MessagesSendRequest) {
+    return await this.mailchimp.messages.send(request)
   }
 }

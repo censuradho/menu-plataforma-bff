@@ -35,7 +35,7 @@ export class EmailValidationTokenRepository {
 
     await this.destroy(payload.id)
 
-    await this.prisma.emailValidationToken.create({
+    return await this.prisma.emailValidationToken.create({
       data: {
         code,
         attempts: reachMAxAttempts ? 0 : payload.attempts + 1,
@@ -53,7 +53,7 @@ export class EmailValidationTokenRepository {
 
     if (alreadyExist) return this.regenerate(alreadyExist, code)
 
-    await this.prisma.emailValidationToken.create({
+    return await this.prisma.emailValidationToken.create({
       data: {
         code,
         userId: payload.userId,

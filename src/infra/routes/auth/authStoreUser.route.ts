@@ -15,13 +15,15 @@ import {
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 import { EmailValidationTokenRepository } from "@/domain/repositories/emailValidationToken/EmailValidationToken.repository";
+import { MailchimpTransactionalService } from "@/services/MailchimpTransactional.service";
 
 const authStoreUserRoute = Router()
 
 const repository = new AuthStoreUserRepository(
   new StoreUserRepository(prisma), 
   new StoreRepository(prisma, new CloudflareR2Service()),
-  new EmailValidationTokenRepository(prisma)
+  new EmailValidationTokenRepository(prisma),
+  new MailchimpTransactionalService()
 )
 
 const controller = new AuthStoreUserController(repository)
