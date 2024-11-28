@@ -23,6 +23,9 @@ export const environment = {
     waitingTimeBeforeNew: 1000 * 60 * 10,
     maxAttempts: 7,
     penaltyTime: 1000 * 60 * 60 // 1h
+  },
+  mailchimp: {
+    apiKey: process.env.MAIL_CHIMP_API_KEY || ''
   }
 }
 
