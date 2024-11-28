@@ -40,11 +40,14 @@ export class AuthStoreUserController {
 
   async signInWithEmailAndPassword(req: Request, res: Response) {
     try {
-      const token = await this.authStoreUserRepository.signInWithEmailAndPassword(req.body)
+      const { token, user } = await this.authStoreUserRepository.signInWithEmailAndPassword(req.body)
 
       this.generateAuthCookie(token, res)
 
-      return res.sendStatus(200)
+      return res.json({
+        isVerified: user?.isVerified
+      })
+
     } catch (error) {
       req.log.error(error)
       if (error instanceof HttpException) {

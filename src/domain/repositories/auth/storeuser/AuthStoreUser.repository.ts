@@ -108,7 +108,10 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
 
     const store = await this.storeRepository.findStoreIdByOwnerId(entity.id)
 
-    return this.generateJWT(entity, store?.id)
+    return {
+      token: this.generateJWT(entity, store?.id),
+      user: new StoreUserModel(entity)
+    }
   }
 
   async me(id: string) {
