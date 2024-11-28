@@ -24,21 +24,21 @@ export class EmailValidationTokenRepository {
     const waitDate = addMilliseconds(payload.createdAt, environment.emailVerification.waitingTimeBeforeNew)
 
     if (isBefore(new Date(), waitDate))
-      throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.WAITING_UNTIL_YOU_CAN_RESEND)
+      throw new HttpException(403, ERRORS.EMAIL_VERIFICATION_TOKEN.WAITING_UNTIL_YOU_CAN_RESEND)
 
     const reachMAxAttempts = payload.attempts >= environment.emailVerification.maxAttempts
 
     const time = addMilliseconds(payload.createdAt, environment.emailVerification.penaltyTime)
 
     if (reachMAxAttempts && isBefore(new Date(), time))
-      throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.LIMIT_MAX_ATTEMPTS_REACHED)
+      throw new HttpException(403, ERRORS.EMAIL_VERIFICATION_TOKEN.LIMIT_MAX_ATTEMPTS_REACHED)
 
     await this.destroy(payload.id)
 
     await this.prisma.emailValidationToken.create({
       data: {
         code,
-        attempts: payload.attempts + 1,
+        attempts: reachMAxAttempts ? 0 : payload.attempts + 1,
         userId: payload.userId,
         expireAt: addMilliseconds(new Date(), environment.emailVerification.waitingTimeBeforeNew)
       }
