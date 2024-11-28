@@ -7,7 +7,7 @@ export class MailchimpTransactionalService {
     private mailchimp = Mailchimp(environment.mailchimp.mandrillApiKey)
   ) {}
 
-  async send (request: Mailchimp.MessagesSendRequest) {
-    return await this.mailchimp.messages.send(request)
+  async sendTemplate (request: Mailchimp.MessagesSendTemplateRequest) {
+    return await this.mailchimp.messages.sendTemplate(request)
   }
 }

@@ -18,6 +18,8 @@ import { Jwt } from '@/shared/jwt';
 import { IAuthStoreUserRepository } from './IAuthStoreUser.repository';
 import { randomUUID } from 'crypto';
 import { CreateEmailValidationTokenDTO } from '@/domain/dto/emailValidationToken.dto';
+import { environment } from '@/shared/environment';
+import { resolvePath } from '@/shared/utils/resolvePath';
 
 export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   constructor (
@@ -27,12 +29,45 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     private mailchimpTransactionalService: MailchimpTransactionalService
   ) {}
 
+  async sendEmailConfirmationToken (code: string, entity: StoreUserEntity) {
+    const urlWithCOde = `${environment.urls.menuUiUrl}${resolvePath(environment.urls.emailConfirmationEndpoint, { token: code })}`
+
+    await this.mailchimpTransactionalService.sendTemplate({
+      template_name: 'email-confirmation',
+      template_content: [],
+      message: {
+        subject: "Confirme seu Email",
+        from_email: environment.mailchimp.norepleyEmail,
+        from_name: 'Menu',
+        important: true,
+        to: [
+          {
+            email: entity.email,
+            type: 'to'
+          }
+        ],
+        global_merge_vars: [
+          {
+            content: `${entity.firstName} ${entity.lastName}`,
+            name: 'name'
+          },
+          {
+            content: urlWithCOde,
+            name: 'confirmLink'
+          }
+        ]
+      }
+    })
+  }
+
   async signUpWithEmailAndPassword(payload: CreateStoreUserDTO) {
     const entity = await this.storeUserRepository.create(payload)
 
-    await this.emailValidationTokenRepository.create({
+    const token = await this.emailValidationTokenRepository.generate({
       userId: entity.id
     })
+
+    await this.sendEmailConfirmationToken(token.code, entity)
 
     return this.generateJWT(entity)
   }
@@ -85,8 +120,12 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   }
 
   async resendEmailValidation (payload: CreateEmailValidationTokenDTO) {
-    const emailToken = await this.emailValidationTokenRepository.create(payload)
+    const user = await this.storeUserRepository.findById(payload.userId)
 
+    if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
 
+    // const token = await this.emailValidationTokenRepository.generate(payload)
+
+    await this.sendEmailConfirmationToken('token.code', user)
   }
 }

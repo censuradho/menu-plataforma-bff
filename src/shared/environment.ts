@@ -6,6 +6,10 @@ config()
 export const environment = {
   PORT: process.env.PORT,
   CORS: process.env.CORS?.split(',') || [],
+  urls: {
+    menuUiUrl: process.env.URL_MENU_UI || '',
+    emailConfirmationEndpoint:  process.env.URL_MENU_UI_EMAIL_CONFIRMATION_ENDPOINT || ''
+  },
   cloudFlare: {
     r2: {
       accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID as string,
@@ -26,7 +30,8 @@ export const environment = {
   },
   mailchimp: {
     marketingApiKey: process.env.MAIL_CHIMP_MARKETING_API_KEY || '',
-    mandrillApiKey: process.env.MANDRILL_API_KEY || ''
+    mandrillApiKey: process.env.MANDRILL_API_KEY || '',
+    norepleyEmail: process.env.MAIL_CHIMP_NOREPLY_EMAIL
   }
 }
 

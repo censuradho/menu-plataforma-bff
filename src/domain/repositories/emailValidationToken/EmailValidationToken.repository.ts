@@ -45,7 +45,7 @@ export class EmailValidationTokenRepository {
     })
   }
 
-  async create (payload: CreateEmailValidationTokenDTO) {
+  async generate (payload: CreateEmailValidationTokenDTO) {
     const alreadyExist = await this
       .findFirst(payload.userId)
 
