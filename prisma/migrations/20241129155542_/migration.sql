@@ -4,6 +4,7 @@ CREATE TABLE "emailValidationTokens" (
     "code" TEXT NOT NULL,
     "expireAt" DATETIME NOT NULL,
     "userId" TEXT NOT NULL,
+    "attempts" INTEGER NOT NULL DEFAULT 0,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
