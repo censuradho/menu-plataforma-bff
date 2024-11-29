@@ -11,6 +11,7 @@ import { loggerHttp } from './shared/lib/logger'
 import { routes } from './infra/routes/routes'
 import path from 'path';
 import { helmetConfig } from './shared/config/helmet';
+import { CloudflareR2Service } from './services/CloudflareR2.service';
 
 const app = express()
 

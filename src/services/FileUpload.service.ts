@@ -8,18 +8,7 @@ export class FileUploadService {
   upload: Multer
 
   constructor () {
-    const storage = multer.diskStorage({
-      destination: (req, files, cb) => {
-        cb(
-          null, 
-          path.resolve(__dirname, '..', 'shared', 'tmp')
-        )
-      },
-      filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-          cb(null, uniqueSuffix + '-' + file.originalname)
-      }
-    })
+    const storage = multer.memoryStorage()
 
     this.upload = multer({
       storage,

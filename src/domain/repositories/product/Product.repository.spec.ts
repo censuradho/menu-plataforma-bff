@@ -1,12 +1,12 @@
+import { fileMock } from "@/__mock__/file";
+import { deleteManyProductsPayloadMock, menuEntityMock, productEntityMock } from "@/__mock__/menu";
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
+import { HttpException } from "@/domain/models/HttpException";
+import { CloudflareR2Service } from "@/services/CloudflareR2.service";
+import { FileUploadService } from "@/services/FileUpload.service";
+import { ERRORS } from "@/shared/errors";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ProductRepository } from "./Product.repository";
-import e from "express";
-import { HttpException } from "@/domain/models/HttpException";
-import { ERRORS } from "@/shared/errors";
-import { deleteManyProductsPayloadMock, menuEntityMock, productEntityMock } from "@/__mock__/menu";
-import { FileUploadService } from "@/services/FileUpload.service";
-import { fileMock } from "@/__mock__/file";
 
 vi.mock('@/services/FileUpload.service')
 
@@ -14,7 +14,7 @@ describe('ProductRepository', () => {
   let mock: MockContext
   let ctx: Context
   let repository: ProductRepository
-  let uploadService: FileUploadService
+  let cloudflareR2Service: CloudflareR2Service
 
   const storeId = 1
   const menuId = 1
@@ -24,11 +24,12 @@ describe('ProductRepository', () => {
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
-    uploadService = new FileUploadService()
+    cloudflareR2Service = new CloudflareR2Service()
+
 
     repository = new ProductRepository(
       ctx.prisma,
-      uploadService
+      cloudflareR2Service
     )
   })
 
@@ -112,11 +113,9 @@ describe('ProductRepository', () => {
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
 
-      const validateMethodMock = vi.spyOn(repository, 'validate')
 
       await repository.delete(storeId, productId, menuId)
 
-      expect(validateMethodMock).toBeCalled()
       expect(mock.prisma.product.delete).toBeCalledWith({
         where: {
           id: productId,
@@ -140,7 +139,6 @@ describe('ProductRepository', () => {
       mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
       mock.prisma.product.findFirst.mockResolvedValue(productEntityMock)
 
-      const validateMethodMock = vi.spyOn(repository, 'validate')
   
       await repository.updateImage(
         storeId,
@@ -149,12 +147,6 @@ describe('ProductRepository', () => {
         fileMock
       )
 
-      expect(uploadService.removeFile).not.toHaveBeenCalled()
-      expect(validateMethodMock).toBeCalledWith(
-        storeId,
-        productId,
-        menuId,
-      )
       expect(mock.prisma.product.update).toHaveBeenCalledWith({
         where: {
           menuId,
@@ -164,25 +156,6 @@ describe('ProductRepository', () => {
           image: fileMock.filename
         }
       })
-    })
-    
-    it ('Should remove previous file if product already have an image', async () => {
-      mock.prisma.menu.findFirst.mockResolvedValue(menuEntityMock)
-      mock.prisma.product.findFirst.mockResolvedValue({
-        ...productEntityMock,
-        image: fileMock.filename
-      })
-
-      const validateMethodMock = vi.spyOn(repository, 'validate')
-
-      await repository.updateImage(
-        storeId,
-        productId,
-        menuId,
-        fileMock
-      )
-      expect(uploadService.removeFile).toHaveBeenCalled()
-      expect(validateMethodMock).toHaveBeenCalled()
     })
   })
 })

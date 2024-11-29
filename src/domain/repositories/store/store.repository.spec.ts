@@ -1,3 +1,4 @@
+import { CloudflareR2Service } from '@/services/CloudflareR2.service';
 import { Context, createMockContext, MockContext } from "@/__test__/setup";
 import { beforeEach, describe, expect, it } from "vitest";
 import { StoreRepository } from "./store.repository";
@@ -10,13 +11,13 @@ describe('StoreRepository', () => {
   let mock: MockContext
   let ctx: Context
   let repository: StoreRepository
-  let fileUploadService: FileUploadService
+  let cloudflareR2Service: CloudflareR2Service
 
   beforeEach(() => {
     mock = createMockContext()
     ctx = mock as unknown as Context
-    fileUploadService = new FileUploadService()
-    repository = new StoreRepository(ctx.prisma, fileUploadService)
+    cloudflareR2Service = new CloudflareR2Service()
+    repository = new StoreRepository(ctx.prisma, cloudflareR2Service)
   })
 
   describe('.create', () => {

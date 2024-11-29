@@ -28,7 +28,7 @@ export class MenuRepository implements IMenuRepository {
         products: {
           upsert: payload.products.map(product => ({
             where: {
-              id: product?.id || 0
+              id: product?.id || 0,
             },
             update: {
               description: product?.description,

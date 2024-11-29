@@ -1,45 +1,42 @@
 import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
-import { FileUploadService } from "@/services/FileUpload.service";
+import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
 
 export class ProductRepository {
   constructor (
     private prisma: PrismaClient,
-    private fileUploadService: FileUploadService
+    private cloudflareR2Service: CloudflareR2Service
   ) {}
-
-  async validate (
+  async find (
     storeId: number,
     productId: number,
     menuId: number
   ) {
- 
-
-    const menu = await this.prisma.menu.findFirst({
+    const store  = await this.prisma.store.findFirst({
       where: {
-        id: menuId,
-        storeId
+        id: storeId,
       },
       select: {
-        id: true
+        menus: {
+          where: {
+            id: menuId
+          },
+          select: {
+            products: {
+              where: {
+                id: productId
+              },
+            }
+          }
+        }
       }
     })
 
-    if (!menu) throw new HttpException(404, ERRORS.MENU.NOT_FOUND)
+    const product = store?.menus[0].products[0]
 
-    const product = await this.prisma.product.findFirst({
-      where: {
-        id: productId,
-        menuId
-      },
-      select: {
-        id: true
-      }
-    })
-
-    if (!product) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
+    return product
   }
 
   async delete (
@@ -47,23 +44,17 @@ export class ProductRepository {
     productId: number,
     menuId: number,
   ) {
-    await this.validate(
+    const product = await this.find(
       storeId,
       productId,
       menuId,
     )
 
-    const product = await this.prisma.product.findFirst({
-      where: {
-        id: productId,
-        menuId
-      }
-    })
-
     if (!product) throw new HttpException(404, ERRORS.PRODUCT.NOT_FOUND)
 
+
     if (product.image) {
-      await this.fileUploadService.removeFile(product.image)
+      await this.deleteFile(product.image, product.assetId!!)
     }
     
     await this.prisma.product.delete({
@@ -75,7 +66,25 @@ export class ProductRepository {
   }
 
   async deleteMany (storeId: number, payload: DeleteManyProductsDTO) {
-    const requests = payload.products.map(product => 
+    const products = await Promise.all(
+        payload.products.map(value => this.find(
+          storeId,
+          value.productId,
+          value.menuId,
+        )
+      )
+    )
+
+    const productsWithImage = products.filter(value => !!value?.image)
+
+    const requestToDeleteAssets = productsWithImage.map( value =>
+      this.deleteFile(
+        value!!.image!!,
+        value?.assetId!!
+      )
+    )
+    
+    const requestsToDeleteProducts = payload.products.map(product => 
       this.prisma.store.update({
         where: {
           id: storeId,
@@ -99,7 +108,10 @@ export class ProductRepository {
       })
     )
 
-    await Promise.all(requests)
+    await Promise.all([
+      ...requestsToDeleteProducts,
+      ...requestToDeleteAssets
+    ])
   }
 
   async updateImage (
@@ -108,23 +120,30 @@ export class ProductRepository {
     menuId: number,
     file: Express.Multer.File
   ) {
-    await this.validate(
+
+    const product = await this.find(
       storeId,
       productId,
-      menuId,
+      menuId
     )
 
-    const product = await this.prisma.product.findFirst({
-      where: {
-        menuId,
-        id: productId
-      }
-    })
-
     if (product?.image) {
-      await this.fileUploadService.removeFile(product.image)
+      await this.deleteFile(product.image, product.assetId!!)
     }
 
+    const uploadedFile = await this.cloudflareR2Service.uploadFile(
+      file.buffer,
+      file.originalname,
+      file.mimetype,
+      'products'
+    )
+
+    const asset = await this.prisma.asset.create({
+      data: {
+        path: uploadedFile.fileName,
+        size: file.size,
+      }
+    })
 
     await this.prisma.product.update({
       where: {
@@ -132,7 +151,18 @@ export class ProductRepository {
         id: productId
       },
       data: {
-        image: file.filename
+        image: uploadedFile.fileName,
+        assetId: asset.id
+      }
+    })
+  }
+
+  async deleteFile (fileName: string, assetId: number) {
+    await this.cloudflareR2Service.deleteByKey(fileName)
+
+    await this.prisma.asset.delete({
+      where: {
+        id: assetId!!
       }
     })
   }

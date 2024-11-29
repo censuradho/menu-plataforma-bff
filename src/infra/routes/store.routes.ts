@@ -1,3 +1,4 @@
+import { CloudflareR2Service } from '@/services/CloudflareR2.service';
 import { Router } from 'express';
 
 import { StoreController } from '@/infra/controllers/store.controller';
@@ -5,17 +6,14 @@ import { storeUserJwtMiddleware } from '@/infra/middleware/auth/storeUserJWT.mid
 
 import { StoreRepository } from '@/domain/repositories/store/store.repository';
 
-import { prisma } from '@/services/PrismaClient';
 import { createStoreValidation } from '@/infra/middleware/store.middleware';
-import { FileUploadService } from '@/services/FileUpload.service';
+import { prisma } from '@/services/PrismaClient';
 import { storeMiddleware } from '../middleware/auth/store.middleware';
 import { uploadSingleFileMiddleware } from '../middleware/fileUpload.middleware';
 
 const storeRoutes = Router()
 
-const fileUploadService = new FileUploadService()
-
-const repository = new StoreRepository(prisma, fileUploadService)
+const repository = new StoreRepository(prisma, new CloudflareR2Service())
 const controller = new StoreController(repository)
 
 storeRoutes.post(
@@ -61,4 +59,4 @@ storeRoutes.get(
 
 export {
   storeRoutes
-}
+};
