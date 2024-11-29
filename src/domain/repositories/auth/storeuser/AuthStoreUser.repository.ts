@@ -127,8 +127,8 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
 
     if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
 
-    // const token = await this.emailValidationTokenRepository.generate(payload)
+    const token = await this.emailValidationTokenRepository.generate(payload)
 
-    await this.sendEmailConfirmationToken('token.code', user)
+    await this.sendEmailConfirmationToken(token.code, user)
   }
 }

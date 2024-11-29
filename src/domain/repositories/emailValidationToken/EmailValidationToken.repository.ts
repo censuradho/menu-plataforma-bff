@@ -4,7 +4,7 @@ import { HttpException } from '@/domain/models/HttpException';
 import { environment } from '@/shared/environment';
 import { ERRORS } from '@/shared/errors';
 import { PrismaClient } from '@prisma/client';
-import { addMilliseconds, isBefore, } from 'date-fns';
+import { addMilliseconds, isBefore } from 'date-fns';
 import crypto from 'node:crypto';
 
 export class EmailValidationTokenRepository {
