@@ -45,4 +45,16 @@ export class StoreUserRepository implements IStoreUSerRepository {
       }
     })
   }
+
+  async markAsEmailVerified (id: string) {
+    await this.prisma.storeUser.update({
+      where: {
+        id
+      },
+      data: {
+        isVerified: true,
+        updatedAt: new Date()
+      }
+    })
+  }
 }

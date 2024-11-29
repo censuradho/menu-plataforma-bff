@@ -64,6 +64,12 @@ authStoreUserRoute.get(
   controller.resendEmailValidation.bind(controller)
 )
 
+
+authStoreUserRoute.get(
+  '/store-user/email-validation/:token', 
+  controller.verifyEmailValidationIntegrityByUserId.bind(controller)
+)
+
 export {
   authStoreUserRoute
 };

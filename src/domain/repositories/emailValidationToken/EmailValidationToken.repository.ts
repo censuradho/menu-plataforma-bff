@@ -20,6 +20,25 @@ export class EmailValidationTokenRepository {
     })
   }
 
+  async findFirstByCode (code: string) {
+    return this.prisma.emailValidationToken.findFirst({
+      where: {
+        code
+      }
+    })
+  }
+
+  async expireAtValidation (code: string) {
+    const exist = await this
+      .findFirstByCode(code)
+
+    if (!exist) throw new HttpException(404, ERRORS.EMAIL_VERIFICATION_TOKEN.NOT_FOUND)
+
+    if (isBefore(exist.expireAt, new Date())) throw new HttpException(403, ERRORS.EMAIL_VERIFICATION_TOKEN.EXPIRED)
+
+    return exist
+  }
+
   async regenerate (payload: EmailValidationTokenEntity, code: string) {
     const waitDate = addMilliseconds(payload.createdAt, environment.emailVerification.waitingTimeBeforeNew)
 

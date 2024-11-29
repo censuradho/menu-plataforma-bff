@@ -131,4 +131,10 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
 
     await this.sendEmailConfirmationToken(token.code, user)
   }
+
+  async validateEmailByUserId (token: string) {
+   const emailValidationTokenEntity = await this.emailValidationTokenRepository.expireAtValidation(token)
+    await this.emailValidationTokenRepository.destroy(emailValidationTokenEntity.id)
+    await this.storeUserRepository.markAsEmailVerified(emailValidationTokenEntity.userId)
+  }
 }
