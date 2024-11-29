@@ -127,6 +127,8 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
 
     if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
 
+    if (user.isVerified) throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.ACCOUNT_ALREADY_VERIFIED)
+
     const token = await this.emailValidationTokenRepository.generate(payload)
 
     await this.sendEmailConfirmationToken(token.code, user)
@@ -136,6 +138,8 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     const user = await this.storeUserRepository.findByEmail(payload.email)
 
     if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
+
+    if (user.isVerified) throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.ACCOUNT_ALREADY_VERIFIED)
 
     const token = await this.emailValidationTokenRepository.generate({
       userId: user.id

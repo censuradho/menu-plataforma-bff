@@ -113,6 +113,7 @@ export class AuthStoreUserController {
       return res.sendStatus(500)   
     }
   }
+
   async resendEmailValidationByEmail (req: Request, res: Response) {
     try {
       const token = await this.authStoreUserRepository.resendEmailValidationByEmail(req.body)
