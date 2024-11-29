@@ -10,28 +10,30 @@ import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.
 import {
   authStoreUserSignUpWithEmailAndPasswordValidation,
   isValidEmailValidation,
+  sendEmailValidationTokenByEmailRequestBodyValidation,
   signInWithEmailAndPasswordRequestBodyValidation
 } from "@/infra/middleware/auth/authStoreUser.validation";
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
+import { EmailValidationTokenRepository } from "@/domain/repositories/emailValidationToken/EmailValidationToken.repository";
+import { MailchimpTransactionalService } from "@/services/MailchimpTransactional.service";
 
 const authStoreUserRoute = Router()
 
-const storeRepository = new StoreRepository(prisma, new CloudflareR2Service())
-const storeUserRepository = new StoreUserRepository(prisma)
-const repository = new AuthStoreUserRepository(storeUserRepository, storeRepository)
+const repository = new AuthStoreUserRepository(
+  new StoreUserRepository(prisma), 
+  new StoreRepository(prisma, new CloudflareR2Service()),
+  new EmailValidationTokenRepository(prisma),
+  new MailchimpTransactionalService()
+)
+
 const controller = new AuthStoreUserController(repository)
 
+// Protect routes
 authStoreUserRoute.post(
   '/store-user/register',
   authStoreUserSignUpWithEmailAndPasswordValidation, 
   controller.signUpWithEmailAndPassword.bind(controller)
-)
-
-authStoreUserRoute.post(
-  '/store-user/email-validation', 
-  isValidEmailValidation, 
-  controller.isValidEmail.bind(controller)
 )
 
 authStoreUserRoute.post(
@@ -48,8 +50,31 @@ authStoreUserRoute.get(
 
 
 authStoreUserRoute.get(
+  '/store-user/resend-email-validation', 
+  storeUserJwtMiddleware,
+  controller.resendEmailValidation.bind(controller)
+)
+
+authStoreUserRoute.post(
+  '/store-user/email-validation', 
+  isValidEmailValidation, 
+  controller.isValidEmail.bind(controller)
+)
+
+authStoreUserRoute.get(
   '/store-user/logout', 
   controller.logout.bind(controller)
+)
+
+authStoreUserRoute.post(
+  '/store-user/resend-email-validation', 
+  sendEmailValidationTokenByEmailRequestBodyValidation,
+  controller.resendEmailValidationByEmail.bind(controller)
+)
+
+authStoreUserRoute.get(
+  '/store-user/email-validation/:token', 
+  controller.verifyEmailValidationIntegrityByToken.bind(controller)
 )
 
 export {

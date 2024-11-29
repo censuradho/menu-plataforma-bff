@@ -12,6 +12,7 @@ import { routes } from './infra/routes/routes'
 import path from 'path';
 import { helmetConfig } from './shared/config/helmet';
 import { CloudflareR2Service } from './services/CloudflareR2.service';
+import { MailchimpTransactionalService } from './services/MailchimpTransactional.service';
 
 const app = express()
 

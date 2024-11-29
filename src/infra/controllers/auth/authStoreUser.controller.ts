@@ -40,11 +40,14 @@ export class AuthStoreUserController {
 
   async signInWithEmailAndPassword(req: Request, res: Response) {
     try {
-      const token = await this.authStoreUserRepository.signInWithEmailAndPassword(req.body)
+      const { token, user } = await this.authStoreUserRepository.signInWithEmailAndPassword(req.body)
 
       this.generateAuthCookie(token, res)
 
-      return res.sendStatus(200)
+      return res.json({
+        isVerified: user?.isVerified
+      })
+
     } catch (error) {
       req.log.error(error)
       if (error instanceof HttpException) {
@@ -91,5 +94,57 @@ export class AuthStoreUserController {
   logout (req: Request, res: Response) {
     signOutMethod(req, res)
     return res.sendStatus(204)
+  }
+
+  async resendEmailValidation (req: Request, res: Response) {
+    try {
+      const user = req.user as JWTPayload
+
+      await this.authStoreUserRepository.resendEmailValidation({
+        userId: user.id
+      })
+      return res.sendStatus(200)
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
+
+  async resendEmailValidationByEmail (req: Request, res: Response) {
+    try {
+      await this.authStoreUserRepository.resendEmailValidationByEmail(req.body)
+
+      return res.sendStatus(200)
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
+
+  async verifyEmailValidationIntegrityByToken (req: Request, res: Response) {
+    try {
+      const { token } = req.params
+
+      const jwt = await this.authStoreUserRepository.validateEmailByToken(token)
+      this.generateAuthCookie(jwt, res)
+
+      return res.sendStatus(200)
+
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
   }
 }

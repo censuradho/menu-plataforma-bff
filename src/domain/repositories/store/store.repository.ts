@@ -25,7 +25,7 @@ export class StoreRepository {
         ownerId: id,
       },
       select: {
-        id: true
+        id: true,
       }
     })
   }
