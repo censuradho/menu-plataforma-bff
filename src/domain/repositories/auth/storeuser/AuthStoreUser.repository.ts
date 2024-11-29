@@ -142,6 +142,7 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     })
 
     await this.sendEmailConfirmationToken(token.code, user)
+    return this.generateJWT(user)
   }
 
   async validateEmailByUserId (token: string) {

@@ -115,7 +115,9 @@ export class AuthStoreUserController {
   }
   async resendEmailValidationByEmail (req: Request, res: Response) {
     try {
-      await this.authStoreUserRepository.resendEmailValidationByEmail(req.body)
+      const token = await this.authStoreUserRepository.resendEmailValidationByEmail(req.body)
+      this.generateAuthCookie(token, res)
+
       return res.sendStatus(200)
     } catch (error) {
       req.log.error(error)
