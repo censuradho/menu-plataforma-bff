@@ -55,8 +55,6 @@ authStoreUserRoute.get(
   controller.resendEmailValidation.bind(controller)
 )
 
-// Public routes
-
 authStoreUserRoute.post(
   '/store-user/email-validation', 
   isValidEmailValidation, 
@@ -76,7 +74,7 @@ authStoreUserRoute.post(
 
 authStoreUserRoute.get(
   '/store-user/email-validation/:token', 
-  controller.verifyEmailValidationIntegrityByUserId.bind(controller)
+  controller.verifyEmailValidationIntegrityByToken.bind(controller)
 )
 
 export {

@@ -116,8 +116,7 @@ export class AuthStoreUserController {
 
   async resendEmailValidationByEmail (req: Request, res: Response) {
     try {
-      const token = await this.authStoreUserRepository.resendEmailValidationByEmail(req.body)
-      this.generateAuthCookie(token, res)
+      await this.authStoreUserRepository.resendEmailValidationByEmail(req.body)
 
       return res.sendStatus(200)
     } catch (error) {
@@ -130,11 +129,12 @@ export class AuthStoreUserController {
     }
   }
 
-  async verifyEmailValidationIntegrityByUserId (req: Request, res: Response) {
+  async verifyEmailValidationIntegrityByToken (req: Request, res: Response) {
     try {
       const { token } = req.params
 
-      await this.authStoreUserRepository.validateEmailByUserId(token)
+      const jwt = await this.authStoreUserRepository.validateEmailByToken(token)
+      this.generateAuthCookie(jwt, res)
 
       return res.sendStatus(200)
 
