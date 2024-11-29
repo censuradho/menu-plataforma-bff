@@ -29,7 +29,7 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     private mailchimpTransactionalService: MailchimpTransactionalService
   ) {}
 
-  async sendEmailConfirmationToken (code: string, entity: StoreUserEntity) {
+  private async sendEmailConfirmationToken (code: string, entity: StoreUserEntity) {
     const urlWithCOde = `${environment.urls.menuUiUrl}${resolvePath(environment.urls.emailConfirmationEndpoint, { token: code })}`
 
     await this.mailchimpTransactionalService.sendTemplate({
@@ -60,6 +60,35 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     })
   }
 
+  private generateJWT (user: StoreUserEntity, storeId?: number) {
+
+    const jwtPayload = new JWTPayload(
+      user.id,
+      storeId,
+    )
+
+    const token = Jwt.generateAccessToken(
+      jwtPayload,
+      {
+        jwtid: randomUUID(),
+      }
+    )
+
+    return token
+  }
+  
+  private async generateAndSendEmailValidation (user?: StoreUserEntity | null) {
+    if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
+    if (user.isVerified) throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.ACCOUNT_ALREADY_VERIFIED)
+
+    const token = await this.emailValidationTokenRepository.generate({
+      userId: user.id
+    })
+    await this.sendEmailConfirmationToken(token.code, user)
+
+    return token
+  }
+
   async signUpWithEmailAndPassword(payload: CreateStoreUserDTO) {
     const entity = await this.storeUserRepository.create(payload)
 
@@ -79,24 +108,7 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
 
     return true
   }
-
-  private generateJWT (user: StoreUserEntity, storeId?: number) {
-
-    const jwtPayload = new JWTPayload(
-      user.id,
-      storeId,
-    )
-
-    const token = Jwt.generateAccessToken(
-      jwtPayload,
-      {
-        jwtid: randomUUID(),
-      }
-    )
-
-    return token
-  }
-
+  
   async signInWithEmailAndPassword (payload: SignInWithEmailAndPasswordDTO) {
     const entity = await this.storeUserRepository.findByEmail(payload.email)
 
@@ -125,28 +137,18 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
   async resendEmailValidation (payload: CreateEmailValidationTokenDTO) {
     const user = await this.storeUserRepository.findById(payload.userId)
 
-    if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
+    const token = await this.generateAndSendEmailValidation(user)
 
-    if (user.isVerified) throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.ACCOUNT_ALREADY_VERIFIED)
-
-    const token = await this.emailValidationTokenRepository.generate(payload)
-
-    await this.sendEmailConfirmationToken(token.code, user)
+    await this.sendEmailConfirmationToken(token.code, user!!)
   }
 
   async resendEmailValidationByEmail (payload: CreateEmailValidationTokenByEmailDTO) {
     const user = await this.storeUserRepository.findByEmail(payload.email)
 
-    if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
+    const token = await this.generateAndSendEmailValidation(user)
 
-    if (user.isVerified) throw new HttpException(401, ERRORS.EMAIL_VERIFICATION_TOKEN.ACCOUNT_ALREADY_VERIFIED)
-
-    const token = await this.emailValidationTokenRepository.generate({
-      userId: user.id
-    })
-
-    await this.sendEmailConfirmationToken(token.code, user)
-    return this.generateJWT(user)
+    await this.sendEmailConfirmationToken(token.code, user!!)
+    return this.generateJWT(user!!)
   }
 
   async validateEmailByUserId (token: string) {
