@@ -10,6 +10,7 @@ import { AuthStoreUserController } from "@/infra/controllers/auth/authStoreUser.
 import {
   authStoreUserSignUpWithEmailAndPasswordValidation,
   isValidEmailValidation,
+  sendEmailValidationTokenByEmailRequestBodyValidation,
   signInWithEmailAndPasswordRequestBodyValidation
 } from "@/infra/middleware/auth/authStoreUser.validation";
 import { storeUserJwtMiddleware } from "@/infra/middleware/auth/storeUserJWT.middleware";
@@ -28,16 +29,11 @@ const repository = new AuthStoreUserRepository(
 
 const controller = new AuthStoreUserController(repository)
 
+// Protect routes
 authStoreUserRoute.post(
   '/store-user/register',
   authStoreUserSignUpWithEmailAndPasswordValidation, 
   controller.signUpWithEmailAndPassword.bind(controller)
-)
-
-authStoreUserRoute.post(
-  '/store-user/email-validation', 
-  isValidEmailValidation, 
-  controller.isValidEmail.bind(controller)
 )
 
 authStoreUserRoute.post(
@@ -54,16 +50,29 @@ authStoreUserRoute.get(
 
 
 authStoreUserRoute.get(
-  '/store-user/logout', 
-  controller.logout.bind(controller)
-)
-
-authStoreUserRoute.get(
   '/store-user/resend-email-validation', 
   storeUserJwtMiddleware,
   controller.resendEmailValidation.bind(controller)
 )
 
+// Public routes
+
+authStoreUserRoute.post(
+  '/store-user/email-validation', 
+  isValidEmailValidation, 
+  controller.isValidEmail.bind(controller)
+)
+
+authStoreUserRoute.get(
+  '/store-user/logout', 
+  controller.logout.bind(controller)
+)
+
+authStoreUserRoute.post(
+  '/store-user/resend-email-validation', 
+  sendEmailValidationTokenByEmailRequestBodyValidation,
+  controller.resendEmailValidationByEmail.bind(controller)
+)
 
 authStoreUserRoute.get(
   '/store-user/email-validation/:token', 

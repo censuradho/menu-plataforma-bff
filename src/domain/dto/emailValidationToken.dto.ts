@@ -4,3 +4,9 @@ export class CreateEmailValidationTokenDTO {
   @IsString()
   userId: string
 }
+
+
+export class CreateEmailValidationTokenByEmailDTO {
+  @IsString()
+  email: string
+}

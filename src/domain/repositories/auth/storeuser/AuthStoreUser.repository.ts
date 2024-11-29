@@ -17,7 +17,7 @@ import { Jwt } from '@/shared/jwt';
 
 import { IAuthStoreUserRepository } from './IAuthStoreUser.repository';
 import { randomUUID } from 'crypto';
-import { CreateEmailValidationTokenDTO } from '@/domain/dto/emailValidationToken.dto';
+import { CreateEmailValidationTokenByEmailDTO, CreateEmailValidationTokenDTO } from '@/domain/dto/emailValidationToken.dto';
 import { environment } from '@/shared/environment';
 import { resolvePath } from '@/shared/utils/resolvePath';
 
@@ -128,6 +128,18 @@ export class AuthStoreUserRepository implements IAuthStoreUserRepository {
     if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
 
     const token = await this.emailValidationTokenRepository.generate(payload)
+
+    await this.sendEmailConfirmationToken(token.code, user)
+  }
+
+  async resendEmailValidationByEmail (payload: CreateEmailValidationTokenByEmailDTO) {
+    const user = await this.storeUserRepository.findByEmail(payload.email)
+
+    if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
+
+    const token = await this.emailValidationTokenRepository.generate({
+      userId: user.id
+    })
 
     await this.sendEmailConfirmationToken(token.code, user)
   }

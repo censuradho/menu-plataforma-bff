@@ -113,6 +113,19 @@ export class AuthStoreUserController {
       return res.sendStatus(500)   
     }
   }
+  async resendEmailValidationByEmail (req: Request, res: Response) {
+    try {
+      await this.authStoreUserRepository.resendEmailValidationByEmail(req.body)
+      return res.sendStatus(200)
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
 
   async verifyEmailValidationIntegrityByUserId (req: Request, res: Response) {
     try {
