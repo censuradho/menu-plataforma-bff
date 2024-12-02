@@ -25,6 +25,7 @@ model PasswordRecovery {
   code String
   expireAt DateTime
   userId String @unique
+  attempts Int @default(0)
 
   createdAt DateTime @default(now())
 
