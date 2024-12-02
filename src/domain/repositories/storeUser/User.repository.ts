@@ -57,4 +57,21 @@ export class StoreUserRepository implements IStoreUSerRepository {
       }
     })
   }
+
+  async changePassword (userId: string, password: string) {
+    const user = await this.findById(userId)
+
+    if (!user) throw new HttpException(404, ERRORS.STORE_USER.NOT_FOUND)
+
+    const hashPassword = bcrypt.hashSync(password, 10)
+
+    await this.prisma.storeUser.update({
+      where: {
+        id: userId
+      },
+      data: {
+        password: hashPassword
+      }
+    })
+  }
 }

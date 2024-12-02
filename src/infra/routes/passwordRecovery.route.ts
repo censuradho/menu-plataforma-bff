@@ -4,7 +4,7 @@ import { MailchimpTransactionalService } from "@/services/MailchimpTransactional
 import { prisma } from "@/services/PrismaClient";
 import { Router } from "express";
 import { PasswordRecoveryController } from "../controllers/passwordRecovery.controller";
-import { generatePasswordRecoveryValidation } from "../middleware/passwordRecovery.validations";
+import { changePasswordValidation, generatePasswordRecoveryValidation } from "../middleware/passwordRecovery.validations";
 
 const passwordRecoveryRouter = Router()
 
@@ -20,6 +20,12 @@ passwordRecoveryRouter.post(
   '/password-recovery',
   generatePasswordRecoveryValidation,
   controller.generate.bind(controller)
+)
+
+passwordRecoveryRouter.post(
+  '/password-recovery/change',
+  changePasswordValidation,
+  controller.changePassword.bind(controller)
 )
 
 export {

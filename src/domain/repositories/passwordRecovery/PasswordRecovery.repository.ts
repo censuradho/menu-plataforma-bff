@@ -1,16 +1,15 @@
-import { randomUUID } from "crypto"
+import { randomUUID } from "crypto";
 
-import { CreatePasswordRecoveryDTO } from "@/domain/dto/passwordREcovery.dto";
+import { ChangePasswordDTO, CreatePasswordRecoveryDTO } from "@/domain/dto/passwordRecovery.dto";
 import { PasswordRecoveryEntity } from "@/domain/entity/passwordRecovery.entity";
+import { StoreUserEntity } from "@/domain/entity/StoreUser.entity";
 import { HttpException } from "@/domain/models/HttpException";
+import { MailchimpTransactionalService } from "@/services/MailchimpTransactional.service";
 import { environment } from "@/shared/environment";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
 import { addMilliseconds, isBefore } from "date-fns";
 import { StoreUserRepository } from "../storeUser/User.repository";
-import { MailchimpTransactionalService } from "@/services/MailchimpTransactional.service";
-import { StoreUserEntity } from "@/domain/entity/StoreUser.entity";
-import { resolvePath } from "@/shared/utils/resolvePath";
 
 export class PasswordRecoveryRepository {
   constructor (
@@ -19,31 +18,25 @@ export class PasswordRecoveryRepository {
     private mailchimpTransactionalService: MailchimpTransactionalService
   ) {}
 
-  private async sendEmail (entity: StoreUserEntity, code: string) {
-    const urlWithCOde = `${environment.urls.menuUiUrl}${resolvePath(environment.urls.emailConfirmationEndpoint, { token: code })}`
-
+  private async sendEmail (email: string, code: string) {
     await this.mailchimpTransactionalService.sendTemplate({
-      template_name: 'email-confirmation',
+      template_name: 'recupera-o-de-senha',
       template_content: [],
       message: {
-        subject: "Confirme seu Email",
+        subject: "Hora de recuperar sua senha",
         from_email: environment.mailchimp.norepleyEmail,
         from_name: 'Menu',
         important: true,
         to: [
           {
-            email: entity.email,
+            email,
             type: 'to'
           }
         ],
         global_merge_vars: [
           {
-            content: `${entity.firstName} ${entity.lastName}`,
-            name: 'name'
-          },
-          {
-            content: urlWithCOde,
-            name: 'confirmLink'
+            content: code,
+            name: 'code'
           }
         ]
       }
@@ -70,11 +63,11 @@ export class PasswordRecoveryRepository {
         code,
         attempts: reachMAxAttempts ? 0 : payload.attempts + 1,
         userId: payload.userId,
-        expireAt: addMilliseconds(new Date(), environment.passwordRecovery.waitingTimeBeforeNew)
+        expireAt: addMilliseconds(new Date(), environment.passwordRecovery.expireAt)
       }
     })
 
-    await this.sendEmail(userEntity, code)
+    await this.sendEmail(userEntity.email, code)
   }
 
   async generate (payload: CreatePasswordRecoveryDTO) {
@@ -98,12 +91,35 @@ export class PasswordRecoveryRepository {
       data: {
         id: randomUUID(),
         code: String(randomDigits),
-        expireAt: addMilliseconds(new Date(), environment.passwordRecovery.waitingTimeBeforeNew),
+        expireAt: addMilliseconds(new Date(), environment.passwordRecovery.expireAt),
         userId: user.id
       }
     })
 
-    await this.sendEmail(user, randomDigits)
+    await this.sendEmail(user.email, randomDigits)
+  }
+
+  async expireAtValidation (code: string) {
+    const exist = await this
+      .prisma.passwordRecovery.findFirst({
+        where: {
+          code
+        }
+      })
+
+    if (!exist) throw new HttpException(404, ERRORS.PASSWORD_RECOVERY.NOT_FOUND)
+
+    if (isBefore(exist.expireAt, new Date())) throw new HttpException(403, ERRORS.PASSWORD_RECOVERY.EXPIRED)
+
+    return exist
+  }
+
+  async changePassword (payload: ChangePasswordDTO) {
+    const code = await this.expireAtValidation(payload.code)
+
+    await this.userRepository.changePassword(code.userId, payload.password)
+
+    await this.destroy(code.id)
   }
 
   async destroy (id: string) {

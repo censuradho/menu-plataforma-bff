@@ -31,6 +31,7 @@ export const environment = {
   },
   passwordRecovery: {
     waitingTimeBeforeNew: 1000 * 60,
+    expireAt: 1000 * 60 * 60 * 24, // 1d,
     maxAttempts: 7,
     penaltyTime: 1000 * 60 * 60 // 1h
   },
