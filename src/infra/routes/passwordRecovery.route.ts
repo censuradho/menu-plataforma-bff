@@ -28,6 +28,11 @@ passwordRecoveryRouter.post(
   controller.changePassword.bind(controller)
 )
 
+passwordRecoveryRouter.get(
+  '/password-recovery/validate/:code',
+  controller.validate.bind(controller)
+)
+
 export {
   passwordRecoveryRouter
 }

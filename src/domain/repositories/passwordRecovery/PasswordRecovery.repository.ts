@@ -114,6 +114,12 @@ export class PasswordRecoveryRepository {
     return exist
   }
 
+  async validate (code: string) {
+    const entity = await this.expireAtValidation(code)
+
+    if (!entity) throw new HttpException(404, ERRORS.PASSWORD_RECOVERY.NOT_FOUND)
+  }
+
   async changePassword (payload: ChangePasswordDTO) {
     const code = await this.expireAtValidation(payload.code)
 

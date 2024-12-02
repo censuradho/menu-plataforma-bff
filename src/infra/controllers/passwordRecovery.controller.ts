@@ -39,4 +39,22 @@ export class PasswordRecoveryController {
       return res.sendStatus(500)   
     }
   }
+
+  async validate (req: Request, res: Response)  {
+    try {
+
+      const { code } = req.params
+
+      await this.repository.validate(code!!)
+
+      return res.sendStatus(200)
+    } catch (error) {
+      req.log.error(error)
+      if (error instanceof HttpException) {
+        return res.status(error.status).json({ message: error.message })
+      }
+
+      return res.sendStatus(500)   
+    }
+  }
 }
