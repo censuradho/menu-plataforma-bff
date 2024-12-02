@@ -1,23 +1,21 @@
 import 'reflect-metadata';
 
-import express from 'express'
-import cors from 'cors'
-import cookieParser from 'cookie-parser'
-import helmet from 'helmet'
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
 
-import { corsConfig } from './shared/config/cors'
-import { environment } from './shared/environment'
-import { loggerHttp } from './shared/lib/logger'
-import { routes } from './infra/routes/routes'
 import path from 'path';
+import { routes } from './infra/routes/routes';
+import { corsConfig } from './shared/config/cors';
+import { environment } from './shared/environment';
+import { loggerHttp } from './shared/lib/logger';
+import helmet from 'helmet';
 import { helmetConfig } from './shared/config/helmet';
-import { CloudflareR2Service } from './services/CloudflareR2.service';
-import { MailchimpTransactionalService } from './services/MailchimpTransactional.service';
 
 const app = express()
 
-// app.use(helmet(helmetConfig))
 
+app.use(helmet(helmetConfig))
 app.use(loggerHttp)
 app.use(cookieParser())
 app.use(express.json())

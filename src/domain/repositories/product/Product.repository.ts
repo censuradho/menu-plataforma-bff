@@ -1,3 +1,5 @@
+import sharp from 'sharp'
+
 import { DeleteManyProductsDTO } from "@/domain/dto/product.dto";
 import { HttpException } from "@/domain/models/HttpException";
 import { CloudflareR2Service } from "@/services/CloudflareR2.service";
@@ -131,8 +133,19 @@ export class ProductRepository {
       await this.deleteFile(product.image, product.assetId!!)
     }
 
+    const optimizedImage = await sharp(file.buffer)
+      .jpeg({ mozjpeg: true })
+      .resize({
+        width: 500,
+        height: 500,
+        fit: 'cover',
+        position: 'center'
+      })
+      .toBuffer()
+      
+
     const uploadedFile = await this.cloudflareR2Service.uploadFile(
-      file.buffer,
+      optimizedImage,
       file.originalname,
       file.mimetype,
       'products'

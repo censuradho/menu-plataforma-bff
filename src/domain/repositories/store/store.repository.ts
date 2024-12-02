@@ -4,6 +4,7 @@ import { CloudflareR2Service } from "@/services/CloudflareR2.service";
 import { environment } from "@/shared/environment";
 import { ERRORS } from "@/shared/errors";
 import { PrismaClient } from "@prisma/client";
+import sharp from "sharp";
 
 export class StoreRepository {
   constructor (
@@ -94,6 +95,16 @@ export class StoreRepository {
 
     if (!store) throw new HttpException(404, ERRORS.STORE.NOT_FOUND)
 
+      const optimizedImage = await sharp(file.buffer)
+        .jpeg({ mozjpeg: true })
+        .resize({
+          width: 100,
+          height: 100,
+          fit: 'cover',
+          position: 'center'
+        })
+        .toBuffer()
+
     if (store?.logo) {
       await this.cloudflareR2Service.deleteByKey(store?.logo)
 
@@ -105,7 +116,7 @@ export class StoreRepository {
     }
 
     const uploadedFile = await this.cloudflareR2Service.uploadFile(
-      file.buffer,
+      optimizedImage,
       file.originalname,
       file.mimetype,
       'store-avatar'
