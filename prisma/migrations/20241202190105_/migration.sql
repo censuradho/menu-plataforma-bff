@@ -9,6 +9,16 @@ CREATE TABLE "emailValidationTokens" (
 );
 
 -- CreateTable
+CREATE TABLE "passwordRecovery" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "code" TEXT NOT NULL,
+    "expireAt" DATETIME NOT NULL,
+    "userId" TEXT NOT NULL,
+    "attempts" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "firstName" TEXT NOT NULL DEFAULT '',
@@ -83,6 +93,9 @@ CREATE TABLE "products" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "emailValidationTokens_userId_key" ON "emailValidationTokens"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "passwordRecovery_userId_key" ON "passwordRecovery"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "stores_ownerId_key" ON "stores"("ownerId");
