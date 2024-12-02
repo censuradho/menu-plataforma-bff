@@ -19,6 +19,19 @@ model EmailValidationToken {
   @@map("emailValidationTokens")
 }
 
+model PasswordRecovery {
+  id String @id
+
+  code String
+  expireAt DateTime
+  userId String @unique
+  attempts Int @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@map("passwordRecovery")
+}
+
 model StoreUser {
   id String @id
   firstName String @default("")

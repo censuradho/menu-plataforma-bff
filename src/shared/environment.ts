@@ -8,7 +8,8 @@ export const environment = {
   CORS: process.env.CORS?.split(',') || [],
   urls: {
     menuUiUrl: process.env.URL_MENU_UI || '',
-    emailConfirmationEndpoint:  process.env.URL_MENU_UI_EMAIL_CONFIRMATION_ENDPOINT || ''
+    emailConfirmationEndpoint:  process.env.URL_MENU_UI_EMAIL_CONFIRMATION_ENDPOINT || '',
+    passwordRecovery: process.env.URL_PASSWORD_RECOVERY_UI
   },
   cloudFlare: {
     r2: {
@@ -25,6 +26,12 @@ export const environment = {
   },
   emailVerification: {
     waitingTimeBeforeNew: 1000 * 60,
+    maxAttempts: 7,
+    penaltyTime: 1000 * 60 * 60 // 1h
+  },
+  passwordRecovery: {
+    waitingTimeBeforeNew: 1000 * 60,
+    expireAt: 1000 * 60 * 60 * 24, // 1d,
     maxAttempts: 7,
     penaltyTime: 1000 * 60 * 60 // 1h
   },
