@@ -20,5 +20,6 @@ export const storeUserEntityMock: StoreUserEntity = {
   password: '$2b$10$gDh9nnInFPhMVXxmbc.JuOpkypDWMlYxOlm48TkR/NhV31RyvqoFG',
   id: 'id',
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
+  isVerified: false
 }

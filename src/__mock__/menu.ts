@@ -22,6 +22,7 @@ export const productEntityMock: ProductEntity = {
   visible: true,
   createdAt: new Date(),
   updatedAt: new Date(),
+  assetId: null
 }
 
 export const menuWithProductsMockEntity: MenuWithProductsEntity = {
@@ -43,6 +44,7 @@ export const menuWithProductsMockEntity: MenuWithProductsEntity = {
       visible: true,
       createdAt: new Date(),
       updatedAt: new Date(),
+      assetId: null
     }
   ]
 }

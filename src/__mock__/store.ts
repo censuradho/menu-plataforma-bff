@@ -24,6 +24,7 @@ export const storeEntityMock: StoreEntity = {
   hourTo: '',
   instagramUrl: '',
   tikTokUrl: '',
-  twitterUrl: ''
+  twitterUrl: '',
+  logoId: null
 }
 
